@@ -1,10 +1,5 @@
 name = "ypt"
-main = "worker.js"
-compatibility_date = "2024-01-01"
+compatibility_date = "2024-09-23"
 
-[vars]
-# Add any environment variables here if needed
-
-[[routes]]
-pattern = "yellowpigment.com/*"
-zone_name = "yellowpigment.com"
+[assets]
+directory = "./public"

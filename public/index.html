@@ -1,0 +1,3224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yellow Pigment Therapeutics — Seed Round</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ── Tokens ──────────────────────────────────────────────────── */
+:root {
+  --gold:        #C49B1E;
+  --gold-deep:   #9A7710;
+  --gold-pale:   #F5EDD3;
+  --gold-muted:  rgba(196,155,30,0.2);
+  --green:       #2D6A4F;
+  --green-pale:  #E4EDE8;
+  --black:       #0B0B0A;
+  --charcoal:    #1A1A18;
+  --charcoal2:   #252520;
+  --mid:         #4A4A46;
+  --soft:        #8A8A82;
+  --cream:       #F2EFE6;
+  --paper:       #F8F6F1;
+  --rule:        rgba(26,26,24,0.09);
+  --sidebar-w:   270px;
+  --font-d:      'Space Grotesk', system-ui, sans-serif;
+  --font-b:      'Inter', system-ui, sans-serif;
+  --font-m:      'Space Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%; width: 100%;
+  overflow: hidden;
+  font-family: var(--font-b);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Shell ───────────────────────────────────────────────────── */
+.deck {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-w);
+  min-width: var(--sidebar-w);
+  background: var(--charcoal);
+  display: flex;
+  flex-direction: column;
+  padding: 32px 28px;
+  position: relative;
+  overflow: hidden;
+  z-index: 10;
+}
+
+/* subtle grid texture */
+.sidebar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 52px;
+  position: relative;
+}
+.logo-name {
+  font-family: var(--font-d);
+  font-size: 15px;
+  font-weight: 700;
+  color: rgba(242,239,230,0.92);
+  letter-spacing: 0.02em;
+}
+
+nav { flex: 1; position: relative; }
+
+.nav-section {
+  margin-bottom: 4px;
+}
+
+.nav-item {
+  display: block;
+  padding: 9px 12px;
+  font-family: var(--font-m);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(242,239,230,0.35);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: color 0.2s, background 0.2s;
+  position: relative;
+  user-select: none;
+}
+.nav-item:hover {
+  color: rgba(242,239,230,0.65);
+  background: rgba(255,255,255,0.04);
+}
+.nav-item.active {
+  color: rgba(242,239,230,0.9);
+  background: rgba(255,255,255,0.07);
+}
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 4px; bottom: 4px;
+  width: 2px;
+  background: var(--gold);
+  border-radius: 0 2px 2px 0;
+}
+
+.nav-sub {
+  padding-left: 24px;
+  font-size: 9px;
+  opacity: 0.7;
+}
+
+.sidebar-footer {
+  position: relative;
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: rgba(242,239,230,0.18);
+  text-transform: uppercase;
+}
+
+/* Slide counter */
+.slide-counter {
+  position: relative;
+  font-family: var(--font-m);
+  font-size: 10px;
+  color: rgba(242,239,230,0.2);
+  margin-bottom: 16px;
+  letter-spacing: 0.06em;
+}
+.slide-counter span { color: rgba(242,239,230,0.5); }
+
+/* ── Content area ────────────────────────────────────────────── */
+.content {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Slide ───────────────────────────────────────────────────── */
+.slide {
+  position: absolute;
+  inset: 0;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(30px);
+  transition: opacity 0.38s ease, transform 0.38s ease;
+}
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+.slide.exit {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* Dark slides */
+.slide.dark {
+  background: var(--charcoal);
+  color: var(--cream);
+}
+
+/* ── Slide inner sections ────────────────────────────────────── */
+.slide-inner {
+  flex: 1;
+  padding: 52px 60px 40px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.slide-bottom {
+  padding: 20px 60px 24px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.slide.dark .slide-bottom {
+  border-top-color: rgba(255,255,255,0.07);
+}
+
+/* ── Typography helpers ──────────────────────────────────────── */
+.section-label {
+  font-family: var(--font-m);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 18px;
+  display: block;
+}
+
+.slide-title {
+  font-family: var(--font-d);
+  font-size: clamp(26px, 3.2vw, 38px);
+  font-weight: 700;
+  color: var(--black);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+.slide.dark .slide-title { color: rgba(242,239,230,0.95); }
+
+.slide-title em {
+  font-style: normal;
+  color: var(--gold);
+}
+
+.key-message {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--mid);
+  max-width: 580px;
+  margin-bottom: 28px;
+}
+.slide.dark .key-message { color: rgba(242,239,230,0.55); }
+
+.bottom-line {
+  font-family: var(--font-d);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--black);
+  flex: 1;
+}
+.slide.dark .bottom-line { color: rgba(242,239,230,0.8); }
+.bottom-line::before {
+  content: '→ ';
+  color: var(--gold);
+}
+
+/* ── Bullet list ─────────────────────────────────────────────── */
+.bullets {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.bullets li {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--mid);
+  align-items: flex-start;
+}
+.slide.dark .bullets li { color: rgba(242,239,230,0.6); }
+.bullets li::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  background: var(--gold);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+
+/* ── SLIDE 1 — COVER ─────────────────────────────────────────── */
+#s1 {
+  background: var(--charcoal);
+  justify-content: center;
+}
+#s1 .slide-inner {
+  justify-content: center;
+  padding: 60px 72px;
+}
+
+.cover-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.07;
+  pointer-events: none;
+}
+
+.cover-tag {
+  font-family: var(--font-m);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 32px;
+}
+
+.cover-title {
+  font-family: var(--font-d);
+  font-size: clamp(36px, 4.5vw, 56px);
+  font-weight: 700;
+  color: rgba(242,239,230,0.95);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 24px;
+}
+
+.cover-sub {
+  font-size: 17px;
+  color: rgba(242,239,230,0.55);
+  line-height: 1.55;
+  max-width: 520px;
+  margin-bottom: 16px;
+}
+
+.cover-support {
+  font-family: var(--font-m);
+  font-size: 11px;
+  color: rgba(242,239,230,0.28);
+  letter-spacing: 0.05em;
+  margin-top: 8px;
+}
+
+.cover-divider {
+  width: 36px;
+  height: 2px;
+  background: var(--gold);
+  margin: 28px 0;
+  border-radius: 1px;
+}
+
+/* Logo mark on cover */
+.cover-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 56px;
+}
+.cover-logo-name {
+  font-family: var(--font-d);
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(242,239,230,0.6);
+  letter-spacing: 0.04em;
+}
+
+/* pathway decorative SVG */
+.cover-pathway {
+  position: absolute;
+  right: 48px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+/* ── SLIDE 2 — PROBLEM ───────────────────────────────────────── */
+.problem-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  flex: 1;
+  margin-top: 8px;
+}
+.problem-col {
+  background: var(--cream);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.problem-col-label {
+  font-family: var(--font-m);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--soft);
+  margin-bottom: 4px;
+}
+.problem-col-title {
+  font-family: var(--font-d);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 10px;
+}
+.problem-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.problem-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+.problem-dot.green { background: var(--green); }
+.problem-dot.gold { background: var(--gold); }
+.problem-row p {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--mid);
+}
+
+/* ── SLIDE 3 — BIOLOGY INSIGHT ───────────────────────────────── */
+.evidence-tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  flex: 1;
+  margin-top: 8px;
+}
+.evidence-tile {
+  background: var(--cream);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 22px 22px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.evidence-tile::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.tile-gold::before { background: var(--gold); }
+.tile-green::before { background: var(--green); }
+.tile-gold2::before { background: linear-gradient(90deg, var(--gold), var(--green)); }
+.tile-green2::before { background: var(--green); }
+
+.evidence-stat {
+  font-family: var(--font-d);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.evidence-stat.gold { color: var(--gold-deep); }
+.evidence-stat.green { color: var(--green); }
+
+.evidence-desc {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--mid);
+  margin-bottom: 8px;
+}
+.evidence-source {
+  font-family: var(--font-m);
+  font-size: 9px;
+  color: var(--soft);
+  letter-spacing: 0.04em;
+}
+
+/* Takeaway strip */
+.takeaway-strip {
+  margin-top: 14px;
+  padding: 14px 20px;
+  background: var(--charcoal);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.takeaway-mark {
+  font-family: var(--font-m);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  white-space: nowrap;
+}
+.takeaway-text {
+  font-family: var(--font-d);
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(242,239,230,0.85);
+  line-height: 1.35;
+}
+
+/* ── SLIDE 4 — PATHWAY ───────────────────────────────────────── */
+.pathway-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  flex: 1;
+  padding: 16px 0 8px;
+}
+.pw-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  min-width: 130px;
+}
+.pw-role {
+  font-family: var(--font-m);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+.pw-name {
+  font-family: var(--font-d);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--black);
+  text-align: center;
+}
+
+.pw-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 0 8px;
+  margin-top: 46px;
+}
+.pw-arrow-row {
+  display: flex;
+  align-items: center;
+}
+.pw-line {
+  width: 52px;
+  height: 1.5px;
+  background: rgba(26,26,24,0.2);
+}
+.pw-head {
+  width: 0;
+  border-top: 4.5px solid transparent;
+  border-bottom: 4.5px solid transparent;
+  border-left: 6px solid rgba(26,26,24,0.2);
+}
+.pw-enzyme {
+  font-family: var(--font-m);
+  font-size: 9px;
+  color: var(--soft);
+  letter-spacing: 0.05em;
+  text-align: center;
+  white-space: nowrap;
+}
+.pw-enzyme.gold-e { color: var(--gold-deep); }
+.pw-enzyme.green-e { color: var(--green); }
+
+.gilbert-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--gold-pale);
+  border-left: 3px solid var(--gold);
+  border-radius: 2px;
+  font-family: var(--font-m);
+  font-size: 8.5px;
+  color: var(--gold-deep);
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+  white-space: nowrap;
+}
+
+/* ── SLIDE 4 — BILIRUBIN CONCENTRATION SPECTRUM ─────────────── */
+.bili-spectrum {
+  margin-top: 10px;
+  border-top: 1px solid var(--rule);
+  padding-top: 12px;
+}
+.bili-spectrum-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+.bili-spectrum-title {
+  font-family: var(--font-m);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mid);
+}
+.bili-spectrum-subtitle {
+  font-family: var(--font-m);
+  font-size: 8.5px;
+  color: rgba(26,26,24,0.35);
+}
+.bili-spectrum-bar {
+  display: flex;
+  height: 24px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.bili-seg {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bili-seg-label {
+  font-family: var(--font-m);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.bili-seg-normal  { background: rgba(26,26,24,0.06); flex: 14; }
+.bili-seg-gilbert {
+  background: linear-gradient(135deg, rgba(196,155,30,0.30), rgba(196,155,30,0.16));
+  border-top: 1.5px solid rgba(196,155,30,0.55);
+  border-bottom: 1.5px solid rgba(196,155,30,0.55);
+  flex: 68;
+}
+.bili-seg-cn2     { background: rgba(26,26,24,0.09); flex: 265; }
+.bili-seg-cn1     { background: rgba(180,60,40,0.07); flex: 550; }
+.bili-seg-gilbert .bili-seg-label { color: var(--gold-deep); }
+.bili-seg-normal .bili-seg-label,
+.bili-seg-cn2 .bili-seg-label,
+.bili-seg-cn1 .bili-seg-label { color: rgba(26,26,24,0.35); }
+.bili-ticks {
+  position: relative;
+  height: 30px;
+  margin-top: 1px;
+}
+.bili-tick {
+  position: absolute;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+.bili-tick-line {
+  width: 1px;
+  height: 5px;
+  background: rgba(26,26,24,0.18);
+}
+.bili-tick-val {
+  font-family: var(--font-m);
+  font-size: 8px;
+  color: rgba(26,26,24,0.4);
+  white-space: nowrap;
+}
+.bili-axis-label {
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-m);
+  font-size: 7.5px;
+  color: rgba(26,26,24,0.28);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+.bili-range-cards {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+.bili-range-card {
+  flex: 1;
+  padding: 6px 8px;
+  border-radius: 4px;
+  background: rgba(26,26,24,0.03);
+  border: 1px solid var(--rule);
+}
+.bili-range-card.highlight {
+  background: rgba(196,155,30,0.08);
+  border-color: rgba(196,155,30,0.32);
+}
+.bili-range-name {
+  font-family: var(--font-d);
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--mid);
+  margin-bottom: 2px;
+  line-height: 1.3;
+}
+.bili-range-card.highlight .bili-range-name { color: var(--gold-deep); }
+.bili-range-val {
+  font-family: var(--font-m);
+  font-size: 8.5px;
+  color: rgba(26,26,24,0.38);
+}
+
+/* ── SLIDE 5 — WHY NOT A DRUG ────────────────────────────────── */
+.three-part {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr 40px 1fr;
+  gap: 0;
+  align-items: stretch;
+  flex: 1;
+  margin-top: 12px;
+}
+.three-part-block {
+  background: var(--cream);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+.three-part-block.highlighted {
+  background: var(--paper);
+  border-color: var(--gold);
+  border-width: 1.5px;
+}
+.three-part-block.problem-block {
+  background: rgba(26,26,24,0.03);
+  border-style: dashed;
+}
+.three-part-num {
+  font-family: var(--font-m);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+.three-part-title {
+  font-family: var(--font-d);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--black);
+  line-height: 1.2;
+}
+.three-part-title.gold { color: var(--gold-deep); }
+.three-part-body {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--mid);
+}
+.three-part-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(26,26,24,0.2);
+  font-size: 20px;
+}
+.problem-tags {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 4px;
+}
+.problem-tag {
+  padding: 5px 10px;
+  background: rgba(26,26,24,0.06);
+  border-radius: 2px;
+  font-family: var(--font-m);
+  font-size: 9.5px;
+  color: var(--mid);
+  letter-spacing: 0.04em;
+}
+
+/* ── SLIDE 6 — OUR SOLUTION ──────────────────────────────────── */
+.prodrug-flow {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  justify-content: center;
+  padding: 12px 0 20px;
+}
+.prodrug-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+}
+.prodrug-box {
+  width: 110px;
+  height: 62px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: var(--font-d);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.25;
+  padding: 8px;
+}
+.pb-ester  { background: rgba(45,106,79,0.1); border: 1.5px solid rgba(45,106,79,0.35); color: var(--green); }
+.pb-bv     { background: rgba(45,106,79,0.06); border: 1.5px solid rgba(45,106,79,0.2); color: var(--green); }
+.pb-br     { background: rgba(196,155,30,0.1); border: 1.5px solid rgba(196,155,30,0.35); color: var(--gold-deep); }
+.pb-effect { background: var(--charcoal); border: none; color: rgba(242,239,230,0.9); }
+.prodrug-node-label {
+  font-family: var(--font-m);
+  font-size: 9px;
+  color: var(--soft);
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+.prodrug-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+  margin-bottom: 22px;
+}
+.prodrug-line {
+  width: 40px;
+  height: 1.5px;
+  background: rgba(26,26,24,0.18);
+  position: relative;
+}
+.prodrug-line::after {
+  content: '';
+  position: absolute;
+  right: -1px; top: -3.5px;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 6px solid rgba(26,26,24,0.18);
+}
+.prodrug-enzyme {
+  font-family: var(--font-m);
+  font-size: 8.5px;
+  color: var(--soft);
+  text-align: center;
+  white-space: nowrap;
+}
+.prodrug-enzyme.g { color: var(--green); }
+.prodrug-enzyme.gd { color: var(--gold-deep); }
+
+.benefit-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+.benefit-card {
+  padding: 14px 16px;
+  background: var(--cream);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+}
+.benefit-card-title {
+  font-family: var(--font-d);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 4px;
+}
+.benefit-card-body {
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--soft);
+}
+
+/* ── SLIDE 7 — MECHANISM ─────────────────────────────────────── */
+.moa-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  flex: 1;
+  margin-top: 8px;
+}
+.moa-cell {
+  background: var(--cream);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 24px 22px 22px;
+  position: relative;
+  overflow: hidden;
+}
+.moa-cell::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.moa-gold::before  { background: var(--gold); }
+.moa-green::before { background: var(--green); }
+.moa-num {
+  font-family: var(--font-d);
+  font-size: 36px;
+  font-weight: 700;
+  opacity: 0.06;
+  color: var(--black);
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.moa-title {
+  font-family: var(--font-d);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 7px;
+}
+.moa-body {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--mid);
+}
+.moa-tag {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-family: var(--font-m);
+  font-size: 8.5px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.tag-gold  { background: var(--gold-pale); color: var(--gold-deep); }
+.tag-green { background: var(--green-pale); color: var(--green); }
+
+/* ── SLIDE 8 — EARLY VALIDATION ──────────────────────────────── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 0;
+  flex: 1;
+  margin-top: 8px;
+}
+.two-col-panel {
+  padding-right: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.two-col-panel:last-child {
+  padding-right: 0;
+  padding-left: 28px;
+}
+.two-col-divider {
+  background: var(--rule);
+}
+.panel-header {
+  font-family: var(--font-m);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 4px;
+}
+.panel-header.gold { color: var(--gold-deep); }
+.panel-header.green { color: var(--green); }
+.validation-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.v-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+.v-icon.gold { background: var(--gold-pale); }
+.v-icon.green { background: var(--green-pale); }
+.v-icon svg { width: 10px; height: 10px; }
+.v-text {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--mid);
+}
+
+/* ── SLIDE 9 — LEAD PROGRAM ──────────────────────────────────── */
+.lead-layout {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 0;
+  flex: 1;
+  margin-top: 8px;
+}
+.lead-left {
+  padding-right: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.lead-right {
+  padding-left: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.aps-box {
+  padding: 22px 22px;
+  background: var(--charcoal);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.aps-label {
+  font-family: var(--font-m);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.aps-title {
+  font-family: var(--font-d);
+  font-size: 16px;
+  font-weight: 700;
+  color: rgba(242,239,230,0.92);
+}
+.aps-body {
+  font-size: 12px;
+  line-height: 1.55;
+  color: rgba(242,239,230,0.5);
+  margin-top: 4px;
+}
+.expansion-arrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--cream);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  border-left: 3px solid;
+  font-size: 12.5px;
+  color: var(--mid);
+}
+.expansion-arrow.gold-border { border-left-color: var(--gold); }
+.expansion-arrow.green-border { border-left-color: var(--green); }
+.exp-arrow-icon {
+  color: var(--soft);
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* ── SLIDE 10 — PLATFORM ─────────────────────────────────────── */
+.platform-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  flex: 1;
+  margin-top: 8px;
+}
+.platform-col {
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.platform-col-header {
+  padding: 18px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.platform-col:nth-child(1) .platform-col-header { background: var(--charcoal); }
+.platform-col:nth-child(2) .platform-col-header { background: var(--green); }
+.platform-col:nth-child(3) .platform-col-header { background: rgba(45,106,79,0.25); border: 1px solid rgba(45,106,79,0.25); }
+.platform-col-label {
+  font-family: var(--font-m);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+.platform-col:nth-child(1) .platform-col-label { color: var(--gold); }
+.platform-col:nth-child(2) .platform-col-label { color: rgba(228,237,232,0.7); }
+.platform-col:nth-child(3) .platform-col-label { color: var(--green); }
+.platform-col-title {
+  font-family: var(--font-d);
+  font-size: 15px;
+  font-weight: 700;
+}
+.platform-col:nth-child(1) .platform-col-title { color: rgba(242,239,230,0.9); }
+.platform-col:nth-child(2) .platform-col-title { color: rgba(242,239,230,0.9); }
+.platform-col:nth-child(3) .platform-col-title { color: var(--black); }
+.platform-col-body {
+  flex: 1;
+  padding: 18px 20px;
+  background: var(--cream);
+  border: 1px solid var(--rule);
+  border-top: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.platform-item {
+  display: flex;
+  gap: 8px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--mid);
+  align-items: flex-start;
+}
+.platform-item::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+
+.platform-col:nth-child(3) .platform-col-body { background: rgba(45,106,79,0.04); }
+.platform-col:nth-child(3) .platform-item { opacity: 0.6; }
+
+/* ── SLIDE 11 — DEVELOPMENT PLAN ─────────────────────────────── */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1;
+  margin-top: 12px;
+}
+.timeline-row {
+  display: flex;
+  gap: 0;
+  position: relative;
+}
+.timeline-row:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 14px;
+  top: 32px;
+  bottom: 0;
+  width: 1.5px;
+  background: rgba(26,26,24,0.08);
+}
+.timeline-marker {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--rule);
+  background: var(--paper);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-m);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--soft);
+  position: relative;
+  z-index: 1;
+  margin-top: 1px;
+}
+.timeline-marker.gold { border-color: var(--gold); background: var(--gold-pale); color: var(--gold-deep); }
+.timeline-marker.green { border-color: var(--green); background: var(--green-pale); color: var(--green); }
+
+.timeline-content {
+  flex: 1;
+  padding: 2px 0 20px 18px;
+}
+.timeline-title {
+  font-family: var(--font-d);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 3px;
+}
+.timeline-body {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--mid);
+}
+.timeline-gate {
+  display: inline-block;
+  margin-top: 5px;
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-family: var(--font-m);
+  font-size: 8.5px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  background: var(--green-pale);
+  color: var(--green);
+}
+.timeline-time {
+  font-family: var(--font-m);
+  font-size: 9px;
+  color: var(--soft);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  padding-top: 4px;
+  width: 68px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+/* ── SLIDES 12–13 — MARKET ──────────────────────────────────── */
+.market-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 12px;
+  flex: 1;
+  margin-top: 12px;
+}
+.market-block {
+  background: var(--cream);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
+}
+.market-block::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+  background: var(--green);
+}
+.market-block.gold-accent::before { background: var(--gold); }
+.market-block.dark-accent::before { background: var(--black); }
+.market-block.mixed-accent::before { background: linear-gradient(180deg, var(--green), var(--gold)); }
+.market-block-eyebrow {
+  font-family: var(--font-m);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+.market-block.gold-accent .market-block-eyebrow { color: var(--gold-deep); }
+.market-block.dark-accent .market-block-eyebrow { color: var(--mid); }
+.market-block.mixed-accent .market-block-eyebrow { color: var(--green); }
+.market-block-stat {
+  font-family: var(--font-d);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--black);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.market-block-title {
+  font-family: var(--font-d);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--black);
+  margin-top: 2px;
+}
+.market-block-body {
+  font-size: 11.5px;
+  color: var(--mid);
+  line-height: 1.55;
+  margin-top: 2px;
+}
+.market-expansion-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 12px;
+  border-top: 1px solid var(--rule);
+  padding-top: 12px;
+}
+.market-exp-node {
+  flex: 1;
+  text-align: center;
+  padding: 8px 4px;
+}
+.market-exp-label {
+  font-family: var(--font-d);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 3px;
+}
+.market-exp-sub {
+  font-family: var(--font-m);
+  font-size: 9px;
+  color: var(--soft);
+}
+.market-exp-arrow {
+  font-size: 14px;
+  color: rgba(26,26,24,0.2);
+  flex-shrink: 0;
+  padding: 0 2px;
+}
+
+/* Competitive landscape slide */
+.comp-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+  flex: 1;
+  margin-top: 12px;
+}
+.comp-col {
+  background: var(--cream);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.comp-col.highlight {
+  background: rgba(45,106,79,0.05);
+  border-color: rgba(45,106,79,0.25);
+}
+.comp-col-num {
+  font-family: var(--font-m);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mid);
+}
+.comp-col.highlight .comp-col-num { color: var(--green); }
+.comp-col-title {
+  font-family: var(--font-d);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--black);
+  line-height: 1.3;
+}
+.comp-col-body {
+  font-size: 11.5px;
+  color: var(--mid);
+  line-height: 1.55;
+}
+.comp-col-bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 4px;
+}
+.comp-bullet {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: 11px;
+  color: var(--mid);
+  line-height: 1.45;
+}
+.comp-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--rule);
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+.comp-col.highlight .comp-dot { background: var(--green); }
+.comp-contrast-bar {
+  display: flex;
+  gap: 0;
+  margin-top: 12px;
+  border-top: 1px solid var(--rule);
+  padding-top: 12px;
+  align-items: stretch;
+}
+.comp-bar-left {
+  flex: 1;
+  padding: 8px 12px;
+  background: rgba(26,26,24,0.05);
+  border-radius: 4px 0 0 4px;
+  text-align: center;
+}
+.comp-bar-mid {
+  width: 1px;
+  background: var(--rule);
+  flex-shrink: 0;
+}
+.comp-bar-right {
+  flex: 1;
+  padding: 8px 12px;
+  background: rgba(45,106,79,0.08);
+  border-radius: 0 4px 4px 0;
+  border: 1px solid rgba(45,106,79,0.2);
+  border-left: none;
+  text-align: center;
+}
+.comp-bar-label {
+  font-family: var(--font-m);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 2px;
+}
+.comp-bar-right .comp-bar-label { color: var(--green); }
+.comp-bar-sub {
+  font-size: 10.5px;
+  color: var(--soft);
+}
+
+/* ── SLIDE 14 — WHY YPT ──────────────────────────────────────── */
+.pillars {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  flex: 1;
+  margin-top: 8px;
+}
+.pillar {
+  background: var(--cream);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 24px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+}
+.pillar::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+}
+.pillar:nth-child(1)::after { background: var(--green); }
+.pillar:nth-child(2)::after { background: var(--gold); }
+.pillar:nth-child(3)::after { background: linear-gradient(90deg, var(--green), var(--gold)); }
+
+.pillar-num {
+  font-family: var(--font-d);
+  font-size: 40px;
+  font-weight: 700;
+  opacity: 0.05;
+  line-height: 1;
+  color: var(--black);
+}
+.pillar-title {
+  font-family: var(--font-d);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 4px;
+}
+.pillar-body {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--mid);
+  flex: 1;
+}
+.pillar-items {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+.pillar-item {
+  display: flex;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--mid);
+  align-items: flex-start;
+}
+.pillar-item::before {
+  content: '';
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--gold);
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+/* ── SLIDE 13 — TEAM ─────────────────────────────────────────── */
+.team-layout {
+  display: grid;
+  grid-template-columns: 1.1fr 1px 0.9fr;
+  gap: 0;
+  flex: 1;
+  margin-top: 8px;
+}
+.team-left {
+  padding-right: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.team-right {
+  padding-left: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.team-card {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 16px 18px;
+  background: var(--cream);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+}
+.team-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-d);
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(242,239,230,0.9);
+}
+.avatar-green { background: var(--green); }
+.avatar-gold  { background: var(--gold-deep); }
+.avatar-char  { background: var(--charcoal); }
+.team-info { flex: 1; }
+.team-name {
+  font-family: var(--font-d);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 2px;
+}
+.team-role {
+  font-family: var(--font-m);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  margin-bottom: 5px;
+}
+.team-bio {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--soft);
+}
+
+.raise-box {
+  background: var(--charcoal);
+  border-radius: 4px;
+  padding: 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.raise-label {
+  font-family: var(--font-m);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.raise-amount {
+  font-family: var(--font-d);
+  font-size: 36px;
+  font-weight: 700;
+  color: rgba(242,239,230,0.95);
+  line-height: 1;
+}
+.raise-type {
+  font-family: var(--font-m);
+  font-size: 10px;
+  color: rgba(242,239,230,0.35);
+  letter-spacing: 0.06em;
+}
+.raise-uses {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+.raise-use-item {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(242,239,230,0.55);
+  align-items: flex-start;
+}
+.raise-use-item::before {
+  content: '';
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--gold);
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+.milestone-note {
+  padding: 12px 16px;
+  background: rgba(45,106,79,0.12);
+  border: 1px solid rgba(45,106,79,0.2);
+  border-radius: 3px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #1a3d2b;
+}
+.milestone-note strong { color: #2D6A4F; }
+
+/* ── Nav arrows ──────────────────────────────────────────────── */
+.nav-arrows {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  display: flex;
+  gap: 8px;
+  z-index: 100;
+}
+.nav-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(26,26,24,0.15);
+  background: var(--paper);
+  color: var(--mid);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: background 0.15s, border-color 0.15s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.nav-btn:hover {
+  background: var(--cream);
+  border-color: rgba(196,155,30,0.4);
+  color: var(--black);
+}
+
+/* ── Slide progress bar ──────────────────────────────────────── */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: var(--sidebar-w);
+  right: 0;
+  height: 2px;
+  background: rgba(26,26,24,0.06);
+  z-index: 100;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--gold);
+  transition: width 0.3s ease;
+}
+
+/* ── PASSWORD GATE ───────────────────────────────────────────── */
+#pw-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #0B0B0A;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+#pw-gate.unlocking {
+  opacity: 0;
+  transform: translateY(-18px);
+  pointer-events: none;
+}
+.pw-gate-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+.pw-gate-wordmark {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.pw-gate-wordmark-top {
+  font-family: var(--font-d);
+  font-size: 20px;
+  font-weight: 700;
+  color: rgba(253,252,249,0.96);
+  letter-spacing: -0.01em;
+}
+.pw-gate-wordmark-sub {
+  font-family: var(--font-m);
+  font-size: 9px;
+  color: rgba(196,155,30,0.75);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.pw-gate-divider {
+  width: 48px;
+  height: 1px;
+  background: rgba(196,155,30,0.35);
+  margin-bottom: 28px;
+}
+.pw-gate-label {
+  font-family: var(--font-m);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(242,239,230,0.35);
+  margin-bottom: 6px;
+}
+.pw-gate-sublabel {
+  font-family: var(--font-m);
+  font-size: 12px;
+  color: rgba(242,239,230,0.28);
+  margin-bottom: 32px;
+  text-align: center;
+}
+.pw-gate-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 280px;
+}
+.pw-gate-input {
+  width: 100%;
+  background: rgba(242,239,230,0.05);
+  border: 1px solid rgba(242,239,230,0.14);
+  border-radius: 6px;
+  padding: 13px 16px;
+  font-family: var(--font-m);
+  font-size: 13px;
+  color: rgba(242,239,230,0.9);
+  outline: none;
+  text-align: center;
+  letter-spacing: 0.12em;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+.pw-gate-input::placeholder {
+  color: rgba(242,239,230,0.2);
+  letter-spacing: 0.08em;
+}
+.pw-gate-input:focus {
+  border-color: rgba(196,155,30,0.45);
+  background: rgba(242,239,230,0.07);
+}
+.pw-gate-input.error {
+  border-color: rgba(200,60,40,0.6);
+  animation: pw-shake 0.35s ease;
+}
+@keyframes pw-shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-8px); }
+  40%       { transform: translateX(8px); }
+  60%       { transform: translateX(-5px); }
+  80%       { transform: translateX(5px); }
+}
+.pw-gate-btn {
+  width: 100%;
+  background: rgba(196,155,30,0.12);
+  border: 1px solid rgba(196,155,30,0.35);
+  border-radius: 6px;
+  padding: 13px 16px;
+  font-family: var(--font-m);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(196,155,30,0.85);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  box-sizing: border-box;
+}
+.pw-gate-btn:hover {
+  background: rgba(196,155,30,0.2);
+  border-color: rgba(196,155,30,0.55);
+  color: rgba(196,155,30,1.0);
+}
+.pw-gate-error {
+  font-family: var(--font-m);
+  font-size: 11px;
+  color: rgba(200,80,60,0.75);
+  letter-spacing: 0.04em;
+  min-height: 16px;
+  text-align: center;
+}
+.pw-gate-footer {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-m);
+  font-size: 9px;
+  color: rgba(242,239,230,0.15);
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE — Mobile & Tablet
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Mobile top bar ──────────────────────────────────────────── */
+.mobile-topbar {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 52px;
+  background: var(--charcoal);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  z-index: 200;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
+/* Hamburger */
+.menu-toggle {
+  width: 36px;
+  height: 36px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0 9px;
+  flex-shrink: 0;
+}
+.menu-toggle span {
+  display: block;
+  width: 18px;
+  height: 1.5px;
+  background: rgba(242,239,230,0.75);
+  border-radius: 1px;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+.deck.nav-open .menu-toggle span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.deck.nav-open .menu-toggle span:nth-child(2) { opacity: 0; }
+.deck.nav-open .menu-toggle span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* Top bar logo */
+.mobile-topbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.mobile-topbar-name {
+  font-family: var(--font-d);
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(242,239,230,0.85);
+  letter-spacing: 0.03em;
+}
+
+/* Slide counter in top bar */
+.mobile-topbar-counter {
+  font-family: var(--font-m);
+  font-size: 10px;
+  color: rgba(242,239,230,0.3);
+  letter-spacing: 0.08em;
+  flex-shrink: 0;
+}
+
+/* Sidebar overlay */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 140;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+/* ── TABLET  ≤ 900px ─────────────────────────────────────────── */
+@media (max-width: 900px) {
+
+  .mobile-topbar { display: flex; }
+
+  /* Sidebar slides in from the left as an overlay */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 150;
+    padding-top: 52px; /* clear the topbar */
+  }
+  .deck.nav-open .sidebar { transform: translateX(0); }
+  .deck.nav-open .sidebar-overlay { display: block; }
+
+  /* Progress bar spans full width */
+  .progress-bar { left: 0; }
+
+  /* Slides scroll internally, content is no longer clipped */
+  .slide { overflow-y: auto; }
+  .slide-inner {
+    padding: 68px 28px 28px; /* 68px top = 52px topbar + 16px breathing room */
+    overflow-y: visible;
+    flex: none;
+  }
+  .slide-bottom { padding: 16px 28px; }
+
+  /* Cover */
+  #s1 .slide-inner { padding: 68px 28px 28px; }
+  .cover-pathway { display: none; }
+  .cover-title { font-size: clamp(26px, 5.5vw, 48px); }
+
+  /* 2-column grids → single column */
+  .problem-cols,
+  .evidence-tiles,
+  .moa-layout,
+  .market-grid { grid-template-columns: 1fr; }
+
+  /* Two-col panels (validation, lead layout) */
+  .two-col {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+  }
+  .two-col-divider { display: none; }
+  .two-col-panel { padding-right: 0; padding-left: 0; }
+  .two-col-panel:last-child {
+    padding-left: 0;
+    border-top: 1px solid var(--rule);
+    padding-top: 20px;
+  }
+
+  /* Three-part (1fr 40px 1fr 40px 1fr) → single column */
+  .three-part { grid-template-columns: 1fr; }
+  .three-part-arrow { display: none; }
+
+  /* Lead layout */
+  .lead-layout { grid-template-columns: 1fr; }
+  .lead-left { padding-right: 0; }
+  .lead-right {
+    padding-left: 0;
+    border-top: 1px solid var(--rule);
+    padding-top: 20px;
+  }
+
+  /* Team layout */
+  .team-layout { grid-template-columns: 1fr; }
+  .team-left { padding-right: 0; padding-bottom: 20px; }
+  .team-right {
+    padding-left: 0;
+    border-top: 1px solid var(--rule);
+    padding-top: 20px;
+  }
+
+  /* 3-column grids → single column */
+  .platform-cols,
+  .pillars,
+  .comp-cols { grid-template-columns: 1fr; }
+
+  /* Benefit grid → 2 columns */
+  .benefit-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Pathway diagrams — horizontal scroll rather than squish */
+  .pathway-row,
+  .prodrug-flow {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 12px;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Bilirubin spectrum — wrap in scrollable container */
+  .bili-spectrum { overflow-x: auto; }
+  .bili-spectrum-bar,
+  .bili-ticks { min-width: 480px; }
+  .bili-range-cards { flex-wrap: wrap; }
+
+  /* Market expansion row */
+  .market-expansion-row {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Bigger nav arrow buttons for touch */
+  .nav-btn { width: 44px; height: 44px; font-size: 16px; }
+  .nav-arrows { bottom: 20px; right: 16px; }
+
+  .slide-title { font-size: clamp(20px, 3.5vw, 34px); }
+}
+
+/* ── MOBILE  ≤ 540px ─────────────────────────────────────────── */
+@media (max-width: 540px) {
+  .slide-inner { padding: 68px 16px 24px; }
+  #s1 .slide-inner { padding: 68px 16px 24px; }
+  .slide-bottom { padding: 12px 16px; }
+
+  .cover-title { font-size: clamp(22px, 7vw, 36px); }
+  .cover-sub { font-size: 14px; }
+  .slide-title { font-size: clamp(18px, 6vw, 28px); }
+  .key-message { font-size: 13px; margin-bottom: 18px; }
+
+  .evidence-stat { font-size: 24px; }
+
+  /* Benefit grid → 1 col on small phones */
+  .benefit-grid { grid-template-columns: 1fr; }
+
+  /* Takeaway strip stacks vertically */
+  .takeaway-strip { flex-direction: column; gap: 8px; align-items: flex-start; }
+
+  /* Raise amount */
+  .raise-amount { font-size: 28px; }
+
+  /* Timeline rows wrap */
+  .milestone-row { flex-wrap: wrap; }
+  .timeline-time { width: auto; text-align: left; }
+
+  /* PW gate form fills screen width */
+  .pw-gate-form { width: calc(100% - 48px); }
+}
+</style>
+</head>
+<body>
+
+<!-- ── PASSWORD GATE ──────────────────────────────────────────── -->
+<div id="pw-gate">
+  <!-- Logo -->
+  <div class="pw-gate-logo">
+    <svg width="56" height="44" viewBox="0 0 56 44" fill="none">
+      <!-- Green gem, center (12,22), r=10 -->
+      <polygon points="12,22 6.3,12.5 17.7,12.5" fill="#2D6A4F" opacity="1.0"/>
+      <polygon points="12,22 17.7,12.5 23.0,22.0" fill="#2D6A4F" opacity="0.72"/>
+      <polygon points="12,22 23.0,22.0 17.7,31.5" fill="#2D6A4F" opacity="0.45"/>
+      <polygon points="12,22 17.7,31.5 6.3,31.5" fill="#2D6A4F" opacity="0.28"/>
+      <polygon points="12,22 6.3,31.5 1.0,22.0" fill="#2D6A4F" opacity="0.18"/>
+      <polygon points="12,22 1.0,22.0 6.3,12.5" fill="#2D6A4F" opacity="0.55"/>
+      <!-- Gold gem, center (44,22), r=10 -->
+      <polygon points="44,22 38.3,12.5 49.7,12.5" fill="#C49B1E" opacity="1.0"/>
+      <polygon points="44,22 49.7,12.5 55.0,22.0" fill="#C49B1E" opacity="0.72"/>
+      <polygon points="44,22 55.0,22.0 49.7,31.5" fill="#C49B1E" opacity="0.45"/>
+      <polygon points="44,22 49.7,31.5 38.3,31.5" fill="#C49B1E" opacity="0.28"/>
+      <polygon points="44,22 38.3,31.5 33.0,22.0" fill="#C49B1E" opacity="0.18"/>
+      <polygon points="44,22 33.0,22.0 38.3,12.5" fill="#C49B1E" opacity="0.55"/>
+    </svg>
+    <div class="pw-gate-wordmark">
+      <span class="pw-gate-wordmark-top">Yellow Pigment</span>
+      <span class="pw-gate-wordmark-sub">Therapeutics</span>
+    </div>
+  </div>
+
+  <div class="pw-gate-divider"></div>
+  <div class="pw-gate-label">Investor Deck</div>
+  <div class="pw-gate-sublabel">This document is confidential.<br>Access is restricted to authorised recipients.</div>
+
+  <div class="pw-gate-form">
+    <input
+      class="pw-gate-input"
+      id="pw-input"
+      type="password"
+      placeholder="Enter access code"
+      autocomplete="off"
+      spellcheck="false"
+    />
+    <button class="pw-gate-btn" id="pw-btn">Access deck →</button>
+    <div class="pw-gate-error" id="pw-error"></div>
+  </div>
+
+  <div class="pw-gate-footer">yellowpigment.com · Confidential · 2026</div>
+</div>
+
+<!-- ── MOBILE TOP BAR (hidden on desktop) ────────────────────── -->
+<header class="mobile-topbar">
+  <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <div class="mobile-topbar-logo">
+    <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+      <polygon points="8,16 5.5,11.7 10.5,11.7" fill="#2D6A4F" opacity="1.0"/>
+      <polygon points="8,16 10.5,11.7 13.0,16.0" fill="#2D6A4F" opacity="0.72"/>
+      <polygon points="8,16 13.0,16.0 10.5,20.3" fill="#2D6A4F" opacity="0.45"/>
+      <polygon points="8,16 10.5,20.3 5.5,20.3" fill="#2D6A4F" opacity="0.28"/>
+      <polygon points="8,16 5.5,20.3 3.0,16.0" fill="#2D6A4F" opacity="0.18"/>
+      <polygon points="8,16 3.0,16.0 5.5,11.7" fill="#2D6A4F" opacity="0.55"/>
+      <polygon points="24,16 21.5,11.7 26.5,11.7" fill="#C49B1E" opacity="1.0"/>
+      <polygon points="24,16 26.5,11.7 29.0,16.0" fill="#C49B1E" opacity="0.72"/>
+      <polygon points="24,16 29.0,16.0 26.5,20.3" fill="#C49B1E" opacity="0.45"/>
+      <polygon points="24,16 26.5,20.3 21.5,20.3" fill="#C49B1E" opacity="0.28"/>
+      <polygon points="24,16 21.5,20.3 19.0,16.0" fill="#C49B1E" opacity="0.18"/>
+      <polygon points="24,16 19.0,16.0 21.5,11.7" fill="#C49B1E" opacity="0.55"/>
+    </svg>
+    <span class="mobile-topbar-name">Yellow Pigment</span>
+  </div>
+  <span class="mobile-topbar-counter" id="mobile-counter">1 / 15</span>
+</header>
+
+<div class="deck">
+
+  <!-- Sidebar overlay (mobile/tablet only) -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- ── SIDEBAR ──────────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="logo">
+      <!-- Logo mark -->
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <!-- Green gem hexagon -->
+        <polygon points="8,16 5.5,11.7 10.5,11.7" fill="#2D6A4F" opacity="1.0"/>
+        <polygon points="8,16 10.5,11.7 13.0,16.0" fill="#2D6A4F" opacity="0.72"/>
+        <polygon points="8,16 13.0,16.0 10.5,20.3" fill="#2D6A4F" opacity="0.45"/>
+        <polygon points="8,16 10.5,20.3 5.5,20.3" fill="#2D6A4F" opacity="0.28"/>
+        <polygon points="8,16 5.5,20.3 3.0,16.0" fill="#2D6A4F" opacity="0.18"/>
+        <polygon points="8,16 3.0,16.0 5.5,11.7" fill="#2D6A4F" opacity="0.55"/>
+        <!-- Gold gem hexagon -->
+        <polygon points="24,16 21.5,11.7 26.5,11.7" fill="#C49B1E" opacity="1.0"/>
+        <polygon points="24,16 26.5,11.7 29.0,16.0" fill="#C49B1E" opacity="0.72"/>
+        <polygon points="24,16 29.0,16.0 26.5,20.3" fill="#C49B1E" opacity="0.45"/>
+        <polygon points="24,16 26.5,20.3 21.5,20.3" fill="#C49B1E" opacity="0.28"/>
+        <polygon points="24,16 21.5,20.3 19.0,16.0" fill="#C49B1E" opacity="0.18"/>
+        <polygon points="24,16 19.0,16.0 21.5,11.7" fill="#C49B1E" opacity="0.55"/>
+      </svg>
+      <span class="logo-name">YPT</span>
+    </div>
+
+    <nav>
+      <div class="nav-section">
+        <span class="nav-item" data-slides="1" id="nav-cover">Cover</span>
+      </div>
+      <div class="nav-section">
+        <span class="nav-item" data-slides="2,3" id="nav-opportunity">The Opportunity</span>
+      </div>
+      <div class="nav-section">
+        <span class="nav-item" data-slides="4,5" id="nav-science">The Science</span>
+      </div>
+      <div class="nav-section">
+        <span class="nav-item" data-slides="6,7,8" id="nav-platform">Platform</span>
+      </div>
+      <div class="nav-section">
+        <span class="nav-item" data-slides="9,10,11" id="nav-pipeline">Pipeline</span>
+      </div>
+      <div class="nav-section">
+        <span class="nav-item" data-slides="12,13" id="nav-market">Market</span>
+      </div>
+      <div class="nav-section">
+        <span class="nav-item" data-slides="14" id="nav-moat">Why YPT</span>
+      </div>
+      <div class="nav-section">
+        <span class="nav-item" data-slides="15" id="nav-team">Team &amp; The Ask</span>
+      </div>
+    </nav>
+
+    <div class="slide-counter">Slide <span id="counter-current">1</span> / 15</div>
+    <div class="sidebar-footer">Confidential · 2026</div>
+  </aside>
+
+  <!-- ── CONTENT ───────────────────────────────────────────────── -->
+  <main class="content">
+
+    <!-- ── SLIDE 1: COVER ────────────────────────────────────── -->
+    <section class="slide dark active" id="s1">
+
+      <!-- Decorative background pathway -->
+      <svg class="cover-pathway" width="320" height="300" viewBox="0 0 320 300" fill="none">
+        <!-- Heme hex -->
+        <polygon points="50,40 80,23 110,40 110,74 80,91 50,74" fill="none" stroke="#C49B1E" stroke-width="1.5"/>
+        <!-- BV diamond -->
+        <rect x="140" y="20" width="60" height="60" rx="3" transform="rotate(45 170 50)" fill="none" stroke="#2D6A4F" stroke-width="1.5"/>
+        <!-- BR diamond -->
+        <rect x="220" y="20" width="60" height="60" rx="3" transform="rotate(45 250 50)" fill="none" stroke="#C49B1E" stroke-width="1.5"/>
+        <!-- Exit circle -->
+        <circle cx="300" cy="50" r="28" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <!-- Arrows -->
+        <line x1="115" y1="50" x2="138" y2="50" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+        <line x1="200" y1="50" x2="218" y2="50" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+        <line x1="279" y1="50" x2="270" y2="50" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+      </svg>
+
+      <div class="slide-inner">
+        <div class="cover-logo">
+          <svg width="48" height="38" viewBox="0 0 48 38" fill="none">
+            <!-- Green gem hexagon -->
+            <polygon points="11,19 6.5,11.2 15.5,11.2" fill="#2D6A4F" opacity="1.0"/>
+            <polygon points="11,19 15.5,11.2 20.0,19.0" fill="#2D6A4F" opacity="0.72"/>
+            <polygon points="11,19 20.0,19.0 15.5,26.8" fill="#2D6A4F" opacity="0.45"/>
+            <polygon points="11,19 15.5,26.8 6.5,26.8" fill="#2D6A4F" opacity="0.28"/>
+            <polygon points="11,19 6.5,26.8 2.0,19.0" fill="#2D6A4F" opacity="0.18"/>
+            <polygon points="11,19 2.0,19.0 6.5,11.2" fill="#2D6A4F" opacity="0.55"/>
+            <!-- Gold gem hexagon -->
+            <polygon points="33,19 28.5,11.2 37.5,11.2" fill="#C49B1E" opacity="1.0"/>
+            <polygon points="33,19 37.5,11.2 42.0,19.0" fill="#C49B1E" opacity="0.72"/>
+            <polygon points="33,19 42.0,19.0 37.5,26.8" fill="#C49B1E" opacity="0.45"/>
+            <polygon points="33,19 37.5,26.8 28.5,26.8" fill="#C49B1E" opacity="0.28"/>
+            <polygon points="33,19 28.5,26.8 24.0,19.0" fill="#C49B1E" opacity="0.18"/>
+            <polygon points="33,19 24.0,19.0 28.5,11.2" fill="#C49B1E" opacity="0.55"/>
+          </svg>
+          <div style="display:flex;flex-direction:column;gap:2px;">
+            <span style="font-family:var(--font-d);font-size:17px;font-weight:700;color:rgba(253,252,249,0.96);letter-spacing:-0.01em;line-height:1.1;">Yellow Pigment</span>
+            <span style="font-family:var(--font-m);font-size:8px;font-weight:400;color:rgba(196,155,30,0.85);letter-spacing:0.18em;text-transform:uppercase;">Therapeutics</span>
+          </div>
+        </div>
+
+        <div class="cover-tag">Seed Round · Confidential · 2026</div>
+        <div class="cover-title">Turning a protective<br>human phenotype<br>into medicine.</div>
+        <div class="cover-divider"></div>
+        <div class="cover-sub">First-in-class therapeutics for inflammatory and metabolic disease, built on the biology of Gilbert syndrome.</div>
+        <div class="cover-support">Human genetics-inspired drug discovery · Biliverdin-ester prodrug platform</div>
+      </div>
+
+      <div class="slide-bottom" style="border-top-color:rgba(255,255,255,0.07);">
+        <span style="font-family:var(--font-m);font-size:10px;color:rgba(242,239,230,0.22);letter-spacing:0.06em;">USE ARROW KEYS OR CLICK → TO NAVIGATE</span>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 2: THE PROBLEM ──────────────────────────────── -->
+    <section class="slide" id="s2">
+      <div class="slide-inner">
+        <span class="section-label">The Opportunity</span>
+        <h1 class="slide-title">Major inflammatory and metabolic diseases<br>remain <em>poorly served.</em></h1>
+        <p class="key-message">Many chronic conditions still lack therapies that are both mechanistically differentiated and suitable for durable, broad disease modification.</p>
+
+        <div class="problem-cols">
+          <div class="problem-col">
+            <div>
+              <div class="problem-col-label">Inflammatory Disease</div>
+              <div class="problem-col-title">Chronic inflammation at scale</div>
+            </div>
+            <div class="problem-row">
+              <div class="problem-dot green"></div>
+              <p>Anti-phospholipid syndrome (APS) remains without FDA-approved disease-modifying therapy beyond anticoagulation</p>
+            </div>
+            <div class="problem-row">
+              <div class="problem-dot green"></div>
+              <p>Systemic inflammatory conditions affect tens of millions globally, with significant morbidity and treatment gaps</p>
+            </div>
+            <div class="problem-row">
+              <div class="problem-dot green"></div>
+              <p><strong>Existing treatments target downstream pathways — few address the underlying oxidative and inflammatory biology</strong></p>
+            </div>
+          </div>
+
+          <div class="problem-col">
+            <div>
+              <div class="problem-col-label">Metabolic Disease</div>
+              <div class="problem-col-title">Metabolic dysfunction is epidemic</div>
+            </div>
+            <div class="problem-row">
+              <div class="problem-dot gold"></div>
+              <p>Obesity, metabolic syndrome, and cardiometabolic risk affect over a billion people globally</p>
+            </div>
+            <div class="problem-row">
+              <div class="problem-dot gold"></div>
+              <p>Inflammatory and metabolic dysfunction are tightly linked — driven by shared oxidative stress pathways</p>
+            </div>
+            <div class="problem-row">
+              <div class="problem-dot gold"></div>
+              <p><strong>Chronic low-grade inflammation ("inflammaging") is a central driver of age-related functional decline.</strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-bottom">
+        <span class="bottom-line">There is a better target hiding in human biology itself.</span>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 3: HUMAN BIOLOGY INSIGHT ───────────────────── -->
+    <section class="slide" id="s3">
+      <div class="slide-inner">
+        <span class="section-label">The Opportunity</span>
+        <h1 class="slide-title">Gilbert syndrome is a natural experiment<br>in <em>protective biology.</em></h1>
+        <p class="key-message">~5–10% of people carry Gilbert syndrome — mildly elevated unconjugated bilirubin via UGT1A1 variation. Epidemiological data consistently shows protection across major disease domains.</p>
+
+        <div class="evidence-tiles">
+          <div class="evidence-tile tile-gold">
+            <div class="evidence-stat gold">−50%</div>
+            <div class="evidence-desc">All-cause mortality in Gilbert syndrome vs. age-matched population controls in large UK cohort study</div>
+            <div class="evidence-source">Horsfall LJ et al. 2013 · n &gt; 2,000</div>
+          </div>
+          <div class="evidence-tile tile-green">
+            <div class="evidence-stat green">−60%</div>
+            <div class="evidence-desc">Coronary heart disease risk in UGT1A1*28 homozygotes vs. wildtype — Framingham Heart Study cohort</div>
+            <div class="evidence-source">Lin JP et al. · Framingham</div>
+          </div>
+          <div class="evidence-tile tile-gold2">
+            <div class="evidence-stat gold" style="font-size:22px;margin-bottom:4px;">Lower BMI &amp; fat mass</div>
+            <div class="evidence-desc">Gilbert-range bilirubin associated with lower adiposity and waist circumference, especially in adults ≥ 35 years</div>
+            <div class="evidence-source">Seyed Khoei N et al. 2018 · Free Radic Biol Med</div>
+          </div>
+          <div class="evidence-tile tile-green2">
+            <div class="evidence-stat green" style="font-size:22px;margin-bottom:4px;">Inflammatory Link</div>
+            <div class="evidence-desc">Lower bilirubin tracks with elevated APS inflammatory burden — elevated BR may confer protection in autoimmune states</div>
+            <div class="evidence-source">Multiple cohort studies</div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-bottom">
+        <div class="takeaway-strip" style="flex:1;">
+          <span class="takeaway-mark">Key Insight</span>
+          <span class="takeaway-text"><strong>Nature has already run the experiment.</strong> Mild bilirubin elevation appears consistently protective — across mortality, cardiovascular, metabolic, and inflammatory domains.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 4: PHENOTYPE TO THESIS ─────────────────────── -->
+    <section class="slide" id="s4">
+      <div class="slide-inner">
+        <span class="section-label">The Science</span>
+        <h1 class="slide-title">A validated human signal can be<br><em>translated into medicine.</em></h1>
+        <p class="key-message">The bilirubin pathway offers a translational bridge from human genetics to pharmacology — with a clear molecular target and an understood mechanism.</p>
+
+        <div class="pathway-row">
+          <!-- HEME -->
+          <div class="pw-node">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <polygon points="40,8 68,24 68,56 40,72 12,56 12,24" fill="#640522" stroke="none"/>
+              <polygon points="40,20 57,30 57,50 40,60 23,50 23,30" fill="none" stroke="rgba(242,239,230,0.18)" stroke-width="1.5"/>
+            </svg>
+            <div class="pw-role">Precursor</div>
+            <div class="pw-name">Heme</div>
+          </div>
+
+          <div class="pw-arrow">
+            <div class="pw-arrow-row"><div class="pw-line"></div><div class="pw-head"></div></div>
+            <div class="pw-enzyme green-e">HO-1 / HO-2</div>
+          </div>
+
+          <!-- BILIVERDIN -->
+          <div class="pw-node">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <rect x="11" y="11" width="58" height="58" rx="3" transform="rotate(45 40 40)" fill="#2D6A4F"/>
+              <rect x="20" y="20" width="40" height="40" rx="2" transform="rotate(45 40 40)" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+            </svg>
+            <div class="pw-role">Intermediate</div>
+            <div class="pw-name">Biliverdin</div>
+          </div>
+
+          <div class="pw-arrow">
+            <div class="pw-arrow-row"><div class="pw-line"></div><div class="pw-head"></div></div>
+            <div class="pw-enzyme gold-e">BLVRA / BLVRB</div>
+          </div>
+
+          <!-- BILIRUBIN -->
+          <div class="pw-node">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <rect x="11" y="11" width="58" height="58" rx="3" transform="rotate(45 40 40)" fill="#C49B1E"/>
+              <rect x="20" y="20" width="40" height="40" rx="2" transform="rotate(45 40 40)" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+            </svg>
+            <div class="pw-role" style="color:var(--gold-deep);">⭑ Therapeutic Target</div>
+            <div class="pw-name" style="color:var(--gold-deep);">Bilirubin</div>
+            <div class="gilbert-badge">⚑ Gilbert window</div>
+          </div>
+
+          <div class="pw-arrow">
+            <div class="pw-arrow-row"><div class="pw-line"></div><div class="pw-head"></div></div>
+            <div class="pw-enzyme">UGT1A1</div>
+            <div style="font-family:var(--font-m);font-size:8px;color:rgba(26,26,24,0.3);text-align:center;">↓ in Gilbert</div>
+          </div>
+
+          <!-- CONJUGATED -->
+          <div class="pw-node">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle cx="40" cy="40" r="30" fill="rgba(26,26,24,0.04)" stroke="rgba(26,26,24,0.2)" stroke-width="1.5" stroke-dasharray="5,3"/>
+            </svg>
+            <div class="pw-role">Excreted</div>
+            <div class="pw-name" style="font-size:13px;">BR-Glucuronide</div>
+          </div>
+        </div>
+
+        <div class="bili-spectrum">
+          <div class="bili-spectrum-header">
+            <span class="bili-spectrum-title">Bilirubin Concentration by Clinical State</span>
+            <span class="bili-spectrum-subtitle">Plasma bilirubin (µM)</span>
+          </div>
+
+          <!-- Spectrum bar -->
+          <div class="bili-spectrum-bar">
+            <div class="bili-seg bili-seg-normal">
+              <span class="bili-seg-label">Normal</span>
+            </div>
+            <div class="bili-seg bili-seg-gilbert">
+              <span class="bili-seg-label">★ YPT Window</span>
+            </div>
+            <div class="bili-seg bili-seg-cn2">
+              <span class="bili-seg-label">CN-II</span>
+            </div>
+            <div class="bili-seg bili-seg-cn1">
+              <span class="bili-seg-label">CN-I</span>
+            </div>
+          </div>
+
+          <!-- Tick marks -->
+          <div class="bili-ticks">
+            <div class="bili-tick" style="left:0%">
+              <div class="bili-tick-line"></div>
+              <div class="bili-tick-val">0</div>
+            </div>
+            <div class="bili-tick" style="left:1.9%">
+              <div class="bili-tick-line"></div>
+              <div class="bili-tick-val">17</div>
+            </div>
+            <div class="bili-tick" style="left:9.4%">
+              <div class="bili-tick-line" style="background:rgba(154,119,16,0.5)"></div>
+              <div class="bili-tick-val" style="color:var(--gold-deep)">85</div>
+            </div>
+            <div class="bili-tick" style="left:11.1%">
+              <div class="bili-tick-line"></div>
+              <div class="bili-tick-val">100</div>
+            </div>
+            <div class="bili-tick" style="left:38.9%">
+              <div class="bili-tick-line"></div>
+              <div class="bili-tick-val">350</div>
+            </div>
+            <div class="bili-tick" style="left:100%">
+              <div class="bili-tick-line"></div>
+              <div class="bili-tick-val">900</div>
+            </div>
+            <div class="bili-axis-label">µM →</div>
+          </div>
+
+          <!-- Range cards -->
+          <div class="bili-range-cards">
+            <div class="bili-range-card">
+              <div class="bili-range-name">Normal</div>
+              <div class="bili-range-val">3.4 – 17 µM</div>
+            </div>
+            <div class="bili-range-card highlight">
+              <div class="bili-range-name">Gilbert Syndrome ★ YPT Window</div>
+              <div class="bili-range-val">17 – 85 µM</div>
+            </div>
+            <div class="bili-range-card">
+              <div class="bili-range-name">Crigler-Najjar II</div>
+              <div class="bili-range-val">100 – 350 µM</div>
+            </div>
+            <div class="bili-range-card">
+              <div class="bili-range-name">Crigler-Najjar I</div>
+              <div class="bili-range-val">350 – 900 µM</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-bottom">
+        <span class="bottom-line">The goal is not hyperbilirubinemia — it is controlled access to the Gilbert protective window.</span>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 5: WHY NOT A DRUG ───────────────────────────── -->
+    <section class="slide" id="s5">
+      <div class="slide-inner">
+        <span class="section-label">The Science</span>
+        <h1 class="slide-title">Why bilirubin has not yet become<br>a <em>practical drug.</em></h1>
+        <p class="key-message">The therapeutic signal is real. But bilirubin itself has been difficult to translate into a scalable, orally delivered medicine.</p>
+
+        <div class="three-part">
+          <div class="three-part-block">
+            <div class="three-part-num">01 — Signal</div>
+            <div class="three-part-title">Compelling biology</div>
+            <div class="three-part-body">Strong epidemiological evidence across mortality, cardiovascular, metabolic, and inflammatory disease. Multiple mechanisms. Clear human phenotype. The biology works.</div>
+            <div style="margin-top:auto;padding-top:12px;">
+              <span class="tag-pill tag-green">Validated in humans</span>
+            </div>
+          </div>
+
+          <div class="three-part-arrow">→</div>
+
+          <div class="three-part-block problem-block">
+            <div class="three-part-num">02 — Problem</div>
+            <div class="three-part-title" style="color:var(--mid);">Delivery bottleneck</div>
+            <div class="three-part-body">Bilirubin itself is chemically difficult. Most published attempts use injectable, infusion, or nanoparticle approaches — limiting utility for chronic disease.</div>
+            <div class="problem-tags">
+              <div class="problem-tag">Poor aqueous solubility</div>
+              <div class="problem-tag">Chemical instability</div>
+              <div class="problem-tag">Hard formulation</div>
+              <div class="problem-tag">Rapid degradation by gut microbiome</div>
+            </div>
+          </div>
+
+          <div class="three-part-arrow">→</div>
+
+          <div class="three-part-block highlighted">
+            <div class="three-part-num" style="color:var(--gold-deep);">03 — Opportunity</div>
+            <div class="three-part-title three-part-title gold">Oral prodrug strategy</div>
+            <div class="three-part-body">A drug design strategy that masks the problematic chemical features of bilirubin — while preserving access to its biology. Delivered orally. Suitable for chronic use.</div>
+            <div style="margin-top:auto;padding-top:12px;">
+              <span class="tag-pill tag-gold">YPT's approach</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-bottom">
+        <span class="bottom-line">The challenge has not been whether bilirubin biology matters. The challenge has been making it druggable.</span>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 6: OUR SOLUTION ─────────────────────────────── -->
+    <section class="slide" id="s6">
+      <div class="slide-inner">
+        <span class="section-label">Platform</span>
+        <h1 class="slide-title">Yellow Pigment is building<br><em>biliverdin-ester prodrugs.</em></h1>
+        <p class="key-message">Biliverdin-esters are a practical drug design strategy to access bilirubin biology in a tractable, developable format — suitable for oral delivery and chronic use.</p>
+
+        <div class="prodrug-flow">
+          <div class="prodrug-node">
+            <div class="prodrug-box pb-ester">BV-Ester<br><span style="font-size:10px;opacity:0.6;font-family:var(--font-m);">Prodrug</span></div>
+            <div class="prodrug-node-label">Oral dose<br>GI lumen</div>
+          </div>
+          <div class="prodrug-arrow">
+            <div class="prodrug-line"></div>
+            <div class="prodrug-enzyme g">Esterase</div>
+          </div>
+          <div class="prodrug-node">
+            <div class="prodrug-box pb-bv">Biliverdin<br><span style="font-size:10px;opacity:0.6;font-family:var(--font-m);">BV</span></div>
+            <div class="prodrug-node-label">Absorbed<br>Systemic</div>
+          </div>
+          <div class="prodrug-arrow">
+            <div class="prodrug-line"></div>
+            <div class="prodrug-enzyme gd">BLVRA/B</div>
+          </div>
+          <div class="prodrug-node">
+            <div class="prodrug-box pb-br">Bilirubin<br><span style="font-size:10px;opacity:0.6;font-family:var(--font-m);">BR</span></div>
+            <div class="prodrug-node-label">Active<br>Pharmacology</div>
+          </div>
+          <div class="prodrug-arrow">
+            <div class="prodrug-line"></div>
+            <div class="prodrug-enzyme" style="color:var(--soft);">UGT1A1</div>
+          </div>
+          <div class="prodrug-node">
+            <div class="prodrug-box pb-effect" style="font-size:11px;">Therapeutic<br>Effect</div>
+            <div class="prodrug-node-label">Gilbert-range<br>biology</div>
+          </div>
+        </div>
+
+        <div class="benefit-grid">
+          <div class="benefit-card">
+            <div class="benefit-card-title">Improved absorption</div>
+            <div class="benefit-card-body">Ester groups increase lipophilicity, enabling passive GI uptake</div>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-card-title">Endogenous activation</div>
+            <div class="benefit-card-body">Esterases regenerate BV → BLVRA/B converts to BR</div>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-card-title">Better CMC profile</div>
+            <div class="benefit-card-body">Improved formulation path vs. bilirubin free acid</div>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-card-title">IP-protected space</div>
+            <div class="benefit-card-body">Ester design creates proprietary composition-of-matter opportunity</div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-bottom">
+        <span class="bottom-line">A chemistry strategy designed for druggability, oral delivery, and mechanistic relevance.</span>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 7: MECHANISM ────────────────────────────────── -->
+    <section class="slide" id="s7">
+      <div class="slide-inner">
+        <span class="section-label">Platform</span>
+        <h1 class="slide-title">Bilirubin biology acts across metabolism,<br>inflammation, and <em>tissue protection.</em></h1>
+        <p class="key-message">This is a pleiotropic mechanism. One biology with multiple pharmacological entry points across major disease categories.</p>
+
+        <div class="moa-layout">
+          <div class="moa-cell moa-gold">
+            <div class="moa-num">01</div>
+            <div class="moa-title">PPARα Modulation</div>
+            <div class="moa-body">Bilirubin acts as an endogenous PPARα ligand, activating fatty acid oxidation and regulating lipid homeostasis — the mechanistic basis for metabolic protection in Gilbert individuals.</div>
+            <span class="moa-tag tag-gold">Metabolic axis</span>
+          </div>
+          <div class="moa-cell moa-green">
+            <div class="moa-num">02</div>
+            <div class="moa-title">Lipophilic Antioxidant</div>
+            <div class="moa-body">BR intercepts peroxyl radicals in lipid membranes — a compartment inaccessible to water-soluble antioxidants. The BV → BR → BV redox cycle amplifies capacity beyond stoichiometric ratios.</div>
+            <span class="moa-tag tag-green">Oxidative stress</span>
+          </div>
+          <div class="moa-cell moa-gold">
+            <div class="moa-num">03</div>
+            <div class="moa-title">BLVRA Signaling</div>
+            <div class="moa-body">Biliverdin reductase A is a dual-function kinase. Beyond BV reduction, it modulates insulin receptor signaling (IRS-1/PI3K) and NFκB — placing it centrally in metabolic and inflammatory control.</div>
+            <span class="moa-tag tag-gold">Signaling axis</span>
+          </div>
+          <div class="moa-cell moa-green">
+            <div class="moa-num">04</div>
+            <div class="moa-title">Microbial Modulation</div>
+            <div class="moa-body">BV and BR exhibit anti-viral and anti-bacterial activity at epithelial barriers, supporting immune homeostasis. Emerging evidence links Gilbert-range BR to favourable host-microbial interaction profiles.</div>
+            <span class="moa-tag tag-green">Host–microbiome axis</span>
+          </div>
+        </div>
+      </div>
+      <div class="slide-bottom">
+        <span class="bottom-line">One biology. Multiple therapeutic entry points across metabolic, inflammatory, and tissue-repair disease.</span>
+        <span style="font-family:var(--font-m);font-size:9px;color:var(--soft);margin-left:auto;">5–10% global Gilbert carrier rate · 4 mechanisms · 3 programs</span>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 8: EARLY VALIDATION ────────────────────────── -->
+    <section class="slide" id="s8">
+      <div class="slide-inner">
+        <span class="section-label">Platform</span>
+        <h1 class="slide-title">Early evidence supports<br><em>platform plausibility.</em></h1>
+        <p class="key-message">Published and internal data support that biliverdin-ester constructs can improve membrane permeability and convert through the intended biological pathway.</p>
+
+        <div class="two-col">
+          <div class="two-col-panel">
+            <div class="panel-header gold">Published Precedent</div>
+            <div class="validation-item">
+              <div class="v-icon gold">
+                <svg viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" fill="#C49B1E" opacity="0.6"/><path d="M3 5l1.5 1.5L7 3.5" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
+              </div>
+              <div class="v-text">BV dimethyl ester (BV-Me₂) demonstrates improved membrane passage versus unmodified biliverdin in published permeability studies</div>
+            </div>
+            <div class="validation-item">
+              <div class="v-icon gold">
+                <svg viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" fill="#C49B1E" opacity="0.6"/><path d="M3 5l1.5 1.5L7 3.5" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
+              </div>
+              <div class="v-text">BV-Me₂ is a substrate for serum and cellular esterases in vitro and in vivo, supporting the bioactivation mechanism</div>
+            </div>
+            <div class="validation-item">
+              <div class="v-icon gold">
+                <svg viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" fill="#C49B1E" opacity="0.6"/><path d="M3 5l1.5 1.5L7 3.5" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
+              </div>
+              <div class="v-text">Epidemiological evidence across four independent study cohorts confirms the human protective phenotype</div>
+            </div>
+          </div>
+
+          <div class="two-col-divider"></div>
+
+          <div class="two-col-panel">
+            <div class="panel-header green">Internal Readouts</div>
+            <div class="validation-item">
+              <div class="v-icon green">
+                <svg viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" fill="#2D6A4F" opacity="0.6"/><path d="M3 5l1.5 1.5L7 3.5" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
+              </div>
+              <div class="v-text">Extracellular BV-to-BR conversion confirmed in monocyte cell culture, demonstrating biologically relevant conversion</div>
+            </div>
+            <div class="validation-item">
+              <div class="v-icon green">
+                <svg viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" fill="#2D6A4F" opacity="0.6"/><path d="M3 5l1.5 1.5L7 3.5" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
+              </div>
+              <div class="v-text">BLVRA knockout slows BV-to-BR conversion, confirming enzymatic mechanism and pathway specificity</div>
+            </div>
+            <div class="validation-item">
+              <div class="v-icon green">
+                <svg viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" fill="#2D6A4F" opacity="0.6"/><path d="M3 5l1.5 1.5L7 3.5" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>
+              </div>
+              <div class="v-text">HPLC, fluorescence (iRFP/eUnaG) and permeability assays developed to support compound screening and lead selection</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-bottom">
+        <span class="bottom-line">The platform has an early mechanistic and translational signal — not just a theoretical idea.</span>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 9: LEAD PROGRAM ─────────────────────────────── -->
+    <section class="slide" id="s9">
+      <div class="slide-inner">
+        <span class="section-label">Pipeline</span>
+        <h1 class="slide-title">Lead program: APS as the<br><em>first clinical wedge.</em></h1>
+        <p class="key-message">APS is an attractive initial indication — strongly connected to inflammatory and oxidative stress biology, with a focused development path and a clear bridge to larger markets.</p>
+
+        <div class="lead-layout">
+          <div class="lead-left">
+            <div class="aps-box">
+              <div class="aps-label">Lead Program</div>
+              <div class="aps-title">Anti-Phospholipid Syndrome (APS)</div>
+              <div class="aps-body">A systemic autoimmune condition characterized by thrombosis, inflammatory burden, and elevated oxidative stress — with no approved disease-modifying therapy beyond anticoagulation.</div>
+              <div style="display:flex;gap:8px;margin-top:6px;">
+                <span class="tag-pill tag-gold">Orphan potential</span>
+                <span style="font-family:var(--font-m);font-size:8.5px;padding:2px 8px;background:rgba(45,106,79,0.15);color:rgba(228,237,232,0.6);border-radius:2px;letter-spacing:0.07em;text-transform:uppercase;">Focused entry</span>
+              </div>
+            </div>
+
+            <ul class="bullets">
+              <li>Human data in APS links lower bilirubin with higher inflammatory burden — direct mechanistic relevance</li>
+              <li>Mechanism aligns with anti-inflammatory and cytoprotective biology of the BV-ester platform</li>
+              <li>Small, focused indication with a clear regulatory path vs. launching directly into broad metabolic markets</li>
+            </ul>
+          </div>
+
+          <div class="two-col-divider"></div>
+
+          <div class="lead-right">
+            <div style="font-family:var(--font-m);font-size:9px;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;color:var(--soft);margin-bottom:4px;">Expansion pathway</div>
+
+            <div class="expansion-arrow gold-border">
+              <span class="exp-arrow-icon">→</span>
+              <div>
+                <div style="font-family:var(--font-d);font-size:13px;font-weight:700;color:var(--black);margin-bottom:2px;">Cardiometabolic</div>
+                <div style="font-size:12px;color:var(--soft);">PPARα + cardiovascular protection · post-APS credibility drives BD opportunity</div>
+              </div>
+            </div>
+
+            <div class="expansion-arrow green-border">
+              <span class="exp-arrow-icon">→</span>
+              <div>
+                <div style="font-family:var(--font-d);font-size:13px;font-weight:700;color:var(--black);margin-bottom:2px;">Metabolic / Obesity</div>
+                <div style="font-size:12px;color:var(--soft);">GLP-1 adjunct positioning · PPARα axis · large addressable market</div>
+              </div>
+            </div>
+
+            <div class="expansion-arrow" style="border-left-color:rgba(26,26,24,0.15);">
+              <span class="exp-arrow-icon" style="color:rgba(26,26,24,0.2);">→</span>
+              <div>
+                <div style="font-family:var(--font-d);font-size:13px;font-weight:700;color:var(--mid);margin-bottom:2px;">Broader Inflammatory</div>
+                <div style="font-size:12px;color:var(--soft);">Tissue repair, gut-liver axis, and oxidative stress conditions</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-bottom">
+        <span class="bottom-line">Start focused. Success in APS creates a highly credible bridge into larger inflammatory and cardiometabolic indications.</span>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 10: PLATFORM EXPANSION ─────────────────────── -->
+    <section class="slide" id="s10">
+      <div class="slide-inner">
+        <span class="section-label">Pipeline</span>
+        <h1 class="slide-title">One engine,<br><em>multiple programs.</em></h1>
+        <p class="key-message">A single chemistry and biology platform generates multiple disease programs over time. Shared infrastructure, cross-applicable learnings, expanding optionality.</p>
+
+        <div class="platform-cols">
+          <div class="platform-col">
+            <div class="platform-col-header">
+              <div class="platform-col-label">Lead Program · Now</div>
+              <div class="platform-col-title">Inflammatory / APS</div>
+            </div>
+            <div class="platform-col-body">
+              <div class="platform-item">APS as focused first indication — clear mechanism and development path</div>
+              <div class="platform-item">BV-Me₂ as lead compound in in vitro and in vivo cascade</div>
+              <div class="platform-item">Human data directly supports mechanistic hypothesis</div>
+              <div class="platform-item">Orphan potential with bridge to cardiometabolic market</div>
+            </div>
+          </div>
+
+          <div class="platform-col">
+            <div class="platform-col-header">
+              <div class="platform-col-label">Expansion 1 · Post-Seed</div>
+              <div class="platform-col-title">Metabolic / Obesity</div>
+            </div>
+            <div class="platform-col-body">
+              <div class="platform-item">PPARα modulation — same mechanism, metabolic indication</div>
+              <div class="platform-item">GLP-1 adjunct positioning for combination use</div>
+              <div class="platform-item">Epidemiological data supports: Gilbert = lower BMI, better adiposity</div>
+              <div class="platform-item">Large addressable market with clear unmet need beyond incretin therapy</div>
+            </div>
+          </div>
+
+          <div class="platform-col">
+            <div class="platform-col-header">
+              <div class="platform-col-label">Expansion 2 · Series A</div>
+              <div class="platform-col-title">Inflammatory &amp; Tissue Repair</div>
+            </div>
+            <div class="platform-col-body">
+              <div class="platform-item">Broader oxidative and inflammatory disease settings</div>
+              <div class="platform-item">Cross-applicable screening, tox, and translational learnings from lead programs</div>
+              <div class="platform-item">Candidate-specific optimization by indication using HTS library</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-bottom">
+        <span class="bottom-line">Not a single-asset story — but we execute like one at the start.</span>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 11: DEVELOPMENT PLAN ───────────────────────── -->
+    <section class="slide" id="s11">
+      <div class="slide-inner">
+        <span class="section-label">Pipeline</span>
+        <h1 class="slide-title">A capital-efficient path to<br><em>candidate nomination.</em></h1>
+        <p class="key-message">The next phase moves from concept to validated lead candidate through a staged screening and preclinical workflow — with clear go/no-go gates at each step.</p>
+
+        <div class="timeline">
+
+          <div class="timeline-row">
+            <div class="timeline-marker gold">1</div>
+            <div class="timeline-content">
+              <div class="timeline-title">Library Design &amp; CRO Synthesis</div>
+              <div class="timeline-body">Rational design of BV-ester variants with AI/ML-guided prioritisation. CRO synthesis of initial 20–40 compound library.</div>
+            </div>
+            <div class="timeline-time">4–6 mo</div>
+          </div>
+
+          <div class="timeline-row">
+            <div class="timeline-marker gold">2</div>
+            <div class="timeline-content">
+              <div class="timeline-title">In Vitro Screening Campaign</div>
+              <div class="timeline-body">Human serum esterase activity, membrane permeability assays (HepG2 and Caco-2), PPARα reporter, intracellular and extracellular BLVRA/BLVRB activity, bilirubin secretion activity.</div>
+              <span class="timeline-gate">Milestone 1</span>
+            </div>
+            <div class="timeline-time">3–6 mo</div>
+          </div>
+
+          <div class="timeline-row">
+            <div class="timeline-marker green">3</div>
+            <div class="timeline-content">
+              <div class="timeline-title">In Vivo Proof-of-Concept</div>
+              <div class="timeline-body">Mouse APS model (MRL/lpr genetic model and aPL antibody induction).</div>
+              <span class="timeline-gate">Milestone 2</span>
+            </div>
+            <div class="timeline-time">6–12 mo</div>
+          </div>
+
+          <div class="timeline-row">
+            <div class="timeline-marker green">4</div>
+            <div class="timeline-content">
+              <div class="timeline-title">Non-GLP NHP PK/PD and Safety</div>
+              <div class="timeline-body">Intra-animal dose escalation study to achieve target bilirubin range (50–100 μM) and assess safety before IIT or IND-enabling studies. IP filing — composition of matter + method of use. Series A fundraise position.</div>
+              <span class="timeline-gate">Milestone 3</span>
+            </div>
+            <div class="timeline-time">1–6 mo</div>
+          </div>
+
+        </div>
+      </div>
+      <div class="slide-bottom">
+        <span class="bottom-line">This seed round converts a compelling biological thesis into a de-risked drug program ready for Series A.</span>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 12: MARKET OPPORTUNITY ────────────────────────── -->
+    <section class="slide" id="s12">
+      <div class="slide-inner">
+        <span class="section-label">Market</span>
+        <h1 class="slide-title">Targeting large,<br><em>chronic disease markets.</em></h1>
+        <p class="key-message">Yellow Pigment is pursuing an oral therapeutic platform positioned at the intersection of two of the largest and most persistent disease categories in medicine: autoimmune / inflammatory disease and metabolic disease.</p>
+
+        <div class="market-grid">
+          <div class="market-block">
+            <div class="market-block-eyebrow">Autoimmune &amp; Inflammatory Disease</div>
+            <div class="market-block-stat">$100B+</div>
+            <div class="market-block-title">Annual global market</div>
+            <div class="market-block-body">Large, chronic, high-burden indications with continued need for differentiated mechanisms.</div>
+          </div>
+          <div class="market-block gold-accent">
+            <div class="market-block-eyebrow">Metabolic Disease</div>
+            <div class="market-block-stat">&gt;1B</div>
+            <div class="market-block-title">Patients worldwide</div>
+            <div class="market-block-body">Massive patient scale with growing demand for durable therapies targeting core disease biology.</div>
+          </div>
+          <div class="market-block dark-accent">
+            <div class="market-block-eyebrow">Economically Favorable Drug Profile</div>
+            <div class="market-block-title">Chronic daily oral therapy</div>
+            <div class="market-block-body">Broad patient populations. Long-term treatment duration. Favorable commercial economics for an oral, once-daily format.</div>
+          </div>
+          <div class="market-block mixed-accent">
+            <div class="market-block-eyebrow">Platform Expansion Path</div>
+            <div class="market-block-title">One engine, multiple indications</div>
+            <div class="market-block-body">Autoimmune → Metabolic → Dermatology → Longevity. One core biological engine with the potential to expand across multiple chronic disease settings over time.</div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-bottom">
+        <span class="bottom-line">Opportunity to develop a scalable oral therapy addressing major drivers of chronic disease, including obesity and inflammaging.</span>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 13: COMPETITIVE LANDSCAPE ──────────────────────── -->
+    <section class="slide" id="s13">
+      <div class="slide-inner">
+        <span class="section-label">Market</span>
+        <h1 class="slide-title">Limited direct competition —<br><em>strong biological validation.</em></h1>
+        <p class="key-message">The biology is increasingly validated, but the field remains open when it comes to building a chronic, oral therapy designed to safely recreate the protective bilirubin phenotype.</p>
+
+        <div class="comp-cols">
+          <div class="comp-col">
+            <div class="comp-col-num">01 — Existing Approaches</div>
+            <div class="comp-col-title">Direct Bilirubin Therapeutics</div>
+            <div class="comp-col-body">External validation of the biology — but in a format that limits utility for chronic disease.</div>
+            <div class="comp-col-bullets">
+              <div class="comp-bullet"><div class="comp-dot"></div><span>Bilix / BRIXELLE platform — PEGylated bilirubin, i.v., early clinical</span></div>
+              <div class="comp-bullet"><div class="comp-dot"></div><span>Focused primarily on acute inflammatory indications</span></div>
+              <div class="comp-bullet"><div class="comp-dot"></div><span>No approved or clinical-stage oral bilirubin-elevating therapy</span></div>
+            </div>
+          </div>
+
+          <div class="comp-col">
+            <div class="comp-col-num">02 — Unmet Need</div>
+            <div class="comp-col-title">Gap in the Field</div>
+            <div class="comp-col-body">The major unmet need remains a practical format for long-term use in chronic disease.</div>
+            <div class="comp-col-bullets">
+              <div class="comp-bullet"><div class="comp-dot"></div><span>No approved or clinical-stage therapies designed to safely elevate bilirubin for chronic disease</span></div>
+              <div class="comp-bullet"><div class="comp-dot"></div><span>i.v. and nanoparticle formats not suited for daily, long-duration administration</span></div>
+              <div class="comp-bullet"><div class="comp-dot"></div><span>Oral prodrug chemistry not pursued by existing players</span></div>
+            </div>
+          </div>
+
+          <div class="comp-col highlight">
+            <div class="comp-col-num">03 — Yellow Pigment</div>
+            <div class="comp-col-title">First-in-class oral approach</div>
+            <div class="comp-col-body">Pharmacologically recreating the Gilbert protective phenotype — designed for daily, chronic use.</div>
+            <div class="comp-col-bullets">
+              <div class="comp-bullet"><div class="comp-dot"></div><span>Oral BV-ester prodrug platform — unique chemistry approach</span></div>
+              <div class="comp-bullet"><div class="comp-dot"></div><span>Designed for chronic disease settings where duration and daily dosing matter</span></div>
+              <div class="comp-bullet"><div class="comp-dot"></div><span>Human genetics-validated target with Gilbert syndrome as natural proof of concept</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="comp-contrast-bar">
+          <div class="comp-bar-left">
+            <div class="comp-bar-label">Existing field</div>
+            <div class="comp-bar-sub">i.v. · acute · nanoparticle · early clinical</div>
+          </div>
+          <div class="comp-bar-mid"></div>
+          <div class="comp-bar-right">
+            <div class="comp-bar-label">Yellow Pigment</div>
+            <div class="comp-bar-sub">oral · chronic · prodrug · daily dosing</div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-bottom">
+        <span class="bottom-line">Strong external validation of the biology — with a clear gap around oral chronic-disease therapeutics.</span>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 14: WHY YPT ──────────────────────────────────── -->
+    <section class="slide" id="s14">
+      <div class="slide-inner">
+        <span class="section-label">Why Yellow Pigment</span>
+        <h1 class="slide-title">Defensibility comes from biology,<br>chemistry, and <em>execution.</em></h1>
+        <p class="key-message">Yellow Pigment combines a differentiated human biology insight with a tractable prodrug chemistry strategy and a focused development plan — across three reinforcing pillars.</p>
+
+        <div class="pillars">
+          <div class="pillar">
+            <div class="pillar-num">I</div>
+            <div class="pillar-title">Human Biology Insight</div>
+            <div class="pillar-body">A hypothesis grounded in one of the most replicated protective phenotypes in human genetics — not a target identified from cell lines or animal models alone.</div>
+            <div class="pillar-items">
+              <div class="pillar-item">Human genetics-validated target</div>
+              <div class="pillar-item">Multiple independent cohort studies</div>
+              <div class="pillar-item">Pleiotropic mechanism across disease areas</div>
+            </div>
+          </div>
+
+          <div class="pillar">
+            <div class="pillar-num">II</div>
+            <div class="pillar-title">Chemistry Platform</div>
+            <div class="pillar-body">Biliverdin-ester design creates a proprietary optimization space. The prodrug strategy solves the formulation and delivery problem that has blocked prior bilirubin approaches.</div>
+            <div class="pillar-items">
+              <div class="pillar-item">BV-ester design library (40+ compounds)</div>
+              <div class="pillar-item">Composition-of-matter IP opportunity</div>
+              <div class="pillar-item">Better CMC profile vs. bilirubin free acid</div>
+            </div>
+          </div>
+
+          <div class="pillar">
+            <div class="pillar-num">III</div>
+            <div class="pillar-title">Development Engine</div>
+            <div class="pillar-body">A staged screening and preclinical workflow built to move efficiently from compound library to validated candidate — with shared infrastructure across programs.</div>
+            <div class="pillar-items">
+              <div class="pillar-item">In vitro screening: permeability + esterase + bioactivity</div>
+              <div class="pillar-item">Cross-applicable tox and translational learnings</div>
+              <div class="pillar-item">Capital-efficient path to Series A</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-bottom">
+        <span class="bottom-line">A differentiated insight, a tractable chemistry strategy, and a focused path to candidate nomination.</span>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 15: TEAM & RAISE ────────────────────────────── -->
+    <section class="slide" id="s15">
+      <div class="slide-inner">
+        <span class="section-label">Team &amp; The Ask</span>
+        <h1 class="slide-title">Experienced founders raising seed capital<br>to reach a <em>major inflection point.</em></h1>
+
+        <div class="team-layout">
+          <div class="team-left">
+
+            <div class="team-card">
+              <img src="data:image/jpeg;base64,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" alt="Nikola Ivica" style="width:42px;height:42px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+              <div class="team-info">
+                <div class="team-name">Nikola Ivica, PhD</div>
+                <div class="team-role">Chief Scientific Officer</div>
+                <div class="team-bio">MIT PhD · Harvard BA. Deep expertise in heme metabolism, bilirubin biology, and therapeutic platform design. Scientific founder of the BV-ester hypothesis.</div>
+              </div>
+            </div>
+
+            <div class="team-card">
+              <img src="data:image/jpeg;base64,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" alt="Ivan Posavec" style="width:42px;height:42px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+              <div class="team-info">
+                <div class="team-name">Ivan Posavec</div>
+                <div class="team-role">Chief Executive Officer</div>
+                <div class="team-bio">Harvard BA. Repeat biotech CEO with early-stage company building and financing experience across multiple therapeutic areas.</div>
+              </div>
+            </div>
+
+            <div class="team-card">
+              <img src="data:image/jpeg;base64,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" alt="Luka Babić" style="width:42px;height:42px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+              <div class="team-info">
+                <div class="team-name">Luka Babić</div>
+                <div class="team-role">Chief Operating Officer</div>
+                <div class="team-bio">Harvard BA. Exited founder and operator focused on execution systems for complex ventures. Drives operational rigour across the platform build.</div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="two-col-divider"></div>
+
+          <div class="team-right">
+            <div class="raise-box">
+              <div class="raise-label">Seed Round</div>
+              <div class="raise-amount">$1.3M</div>
+              <div class="raise-type">SAFE · 18-month runway</div>
+              <div class="raise-uses">
+                <div class="raise-use-item">Synthesize and screen initial BV-ester library (40+ compounds)</div>
+                <div class="raise-use-item">Generate in vitro and in vivo proof-of-concept (APS + metabolic models)</div>
+                <div class="raise-use-item">Advance top candidates through early NHP tox work</div>
+                <div class="raise-use-item">Support IP filing — composition of matter + method of use</div>
+              </div>
+            </div>
+
+            <div class="milestone-note">
+              <strong>Goal:</strong> Nominate a Yellow Pigment development candidate and position the company for <strong>Series A financing</strong> or strategic partnering with a biopharmaceutical partner.
+            </div>
+
+            <div style="padding:14px 16px;background:var(--cream);border:1px solid var(--rule);border-radius:3px;">
+              <div style="font-family:var(--font-m);font-size:9px;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;color:var(--soft);margin-bottom:8px;">Key milestones funded</div>
+              <div style="display:flex;flex-direction:column;gap:5px;">
+                <div style="display:flex;gap:8px;font-size:12px;color:var(--mid);align-items:center;">
+                  <span style="color:var(--green);font-size:10px;">✓</span> Library design + CRO synthesis
+                </div>
+                <div style="display:flex;gap:8px;font-size:12px;color:var(--mid);align-items:center;">
+                  <span style="color:var(--green);font-size:10px;">✓</span> In vitro screening cascade
+                </div>
+                <div style="display:flex;gap:8px;font-size:12px;color:var(--mid);align-items:center;">
+                  <span style="color:var(--green);font-size:10px;">✓</span> In vivo efficacy (mouse APS + DIO)
+                </div>
+                <div style="display:flex;gap:8px;font-size:12px;color:var(--mid);align-items:center;">
+                  <span style="color:var(--green);font-size:10px;">✓</span> IP portfolio filing
+                </div>
+                <div style="display:flex;gap:8px;font-size:12px;color:var(--gold-deep);align-items:center;font-weight:600;">
+                  <span style="font-size:10px;">→</span> Development candidate nomination
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main><!-- /content -->
+</div><!-- /deck -->
+
+<!-- Nav arrows -->
+<div class="nav-arrows">
+  <button class="nav-btn" id="btn-prev">←</button>
+  <button class="nav-btn" id="btn-next">→</button>
+</div>
+
+<!-- Progress bar -->
+<div class="progress-bar">
+  <div class="progress-fill" id="progress-fill"></div>
+</div>
+
+<script>
+const TOTAL = 15;
+let current = 1;
+
+const slides     = document.querySelectorAll('.slide');
+const navItems   = document.querySelectorAll('.nav-item');
+const counterEl  = document.getElementById('counter-current');
+const progressEl = document.getElementById('progress-fill');
+
+// Nav map: which slides each nav item covers
+const navMap = {
+  'nav-cover':       [1],
+  'nav-opportunity': [2, 3],
+  'nav-science':     [4, 5],
+  'nav-platform':    [6, 7, 8],
+  'nav-pipeline':    [9, 10, 11],
+  'nav-market':      [12, 13],
+  'nav-moat':        [14],
+  'nav-team':        [15],
+};
+
+function goTo(n) {
+  if (n < 1 || n > TOTAL) return;
+
+  const oldSlide = document.getElementById('s' + current);
+  oldSlide.classList.remove('active');
+  oldSlide.classList.add('exit');
+  setTimeout(() => oldSlide.classList.remove('exit'), 300);
+
+  current = n;
+  const newSlide = document.getElementById('s' + current);
+  newSlide.classList.add('active');
+
+  // update counter
+  counterEl.textContent = current;
+  const mobileCounter = document.getElementById('mobile-counter');
+  if (mobileCounter) mobileCounter.textContent = current + ' / ' + TOTAL;
+
+  // update progress
+  progressEl.style.width = ((current / TOTAL) * 100) + '%';
+
+  // update nav
+  navItems.forEach(item => item.classList.remove('active'));
+  for (const [id, slides] of Object.entries(navMap)) {
+    if (slides.includes(current)) {
+      document.getElementById(id).classList.add('active');
+    }
+  }
+}
+
+// Arrow buttons
+document.getElementById('btn-prev').addEventListener('click', () => goTo(current - 1));
+document.getElementById('btn-next').addEventListener('click', () => goTo(current + 1));
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(current - 1);
+});
+
+// Nav item clicks — go to first slide in section
+navItems.forEach(item => {
+  item.addEventListener('click', () => {
+    const id = item.id;
+    if (navMap[id]) goTo(navMap[id][0]);
+  });
+});
+
+// Initialize
+goTo(1);
+
+// ── PASSWORD GATE ─────────────────────────────────────────────
+// Password is stored as a base64-encoded string.
+// To change: replace the value below with btoa('yournewpassword')
+const PW_HASH = btoa('ypt2026'); // placeholder — change before going live
+
+const gate    = document.getElementById('pw-gate');
+const pwInput = document.getElementById('pw-input');
+const pwBtn   = document.getElementById('pw-btn');
+const pwError = document.getElementById('pw-error');
+
+function unlock() {
+  const entered = pwInput.value.trim();
+  if (btoa(entered) === PW_HASH) {
+    sessionStorage.setItem('ypt-unlocked', 'true');
+    gate.classList.add('unlocking');
+    setTimeout(() => { gate.style.display = 'none'; }, 580);
+  } else {
+    pwInput.classList.add('error');
+    pwError.textContent = 'Incorrect access code. Please try again.';
+    setTimeout(() => pwInput.classList.remove('error'), 400);
+    pwInput.value = '';
+    pwInput.focus();
+  }
+}
+
+// Skip gate if already unlocked in this session
+if (sessionStorage.getItem('ypt-unlocked') === 'true') {
+  gate.style.display = 'none';
+}
+
+pwBtn.addEventListener('click', unlock);
+pwInput.addEventListener('keydown', e => { if (e.key === 'Enter') unlock(); });
+
+// ── HAMBURGER MENU ─────────────────────────────────────────────
+const deck        = document.querySelector('.deck');
+const menuToggle  = document.getElementById('menu-toggle');
+const sideOverlay = document.getElementById('sidebar-overlay');
+
+function toggleNav() { deck.classList.toggle('nav-open'); }
+function closeNav()  { deck.classList.remove('nav-open'); }
+
+menuToggle.addEventListener('click', toggleNav);
+sideOverlay.addEventListener('click', closeNav);
+
+// Close sidebar after tapping a nav item on mobile
+navItems.forEach(item => item.addEventListener('click', () => {
+  if (window.innerWidth <= 900) closeNav();
+}));
+
+// ── TOUCH SWIPE ────────────────────────────────────────────────
+let touchStartX = 0;
+let touchStartY = 0;
+document.addEventListener('touchstart', e => {
+  touchStartX = e.changedTouches[0].screenX;
+  touchStartY = e.changedTouches[0].screenY;
+}, { passive: true });
+document.addEventListener('touchend', e => {
+  if (deck.classList.contains('nav-open')) return;
+  const dx = e.changedTouches[0].screenX - touchStartX;
+  const dy = e.changedTouches[0].screenY - touchStartY;
+  // Only trigger swipe if horizontal movement is dominant and > 48px
+  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 48) {
+    dx < 0 ? goTo(current + 1) : goTo(current - 1);
+  }
+}, { passive: true });
+</script>
+
+</body>
+</html>
