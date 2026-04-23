@@ -1145,6 +1145,51 @@ nav { flex: 1; position: relative; }
 .platform-col:nth-child(3) .platform-col-body { background: rgba(45,106,79,0.04); }
 .platform-col:nth-child(3) .platform-item { opacity: 0.6; }
 
+/* Market-opportunity callout at the bottom of each pipeline column */
+.market-callout {
+  margin-top: auto;
+  padding: 14px 14px 13px;
+  border-radius: 4px;
+  background: var(--charcoal);
+  color: rgba(242,239,230,0.85);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04) inset;
+  opacity: 1 !important;
+}
+.market-callout-eyebrow {
+  font-family: var(--font-m);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 2px;
+}
+.market-callout-stat {
+  font-family: var(--font-d);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: rgba(242,239,230,0.96);
+}
+.market-callout-sub {
+  font-size: 11px;
+  line-height: 1.45;
+  color: rgba(242,239,230,0.6);
+  margin-top: 5px;
+}
+.market-callout-gold { background: var(--gold-deep); }
+.market-callout-gold .market-callout-eyebrow { color: rgba(255,255,255,0.85); }
+.market-callout-gold .market-callout-stat { color: #fff; }
+.market-callout-gold .market-callout-sub { color: rgba(255,255,255,0.78); }
+.market-callout-green { background: var(--green); }
+.market-callout-green .market-callout-eyebrow { color: var(--gold); }
+.market-callout-green .market-callout-stat { color: #fff; }
+.market-callout-green .market-callout-sub { color: rgba(255,255,255,0.78); }
+
 /* ── SLIDE 11 — DEVELOPMENT PLAN ─────────────────────────────── */
 .timeline {
   display: flex;
@@ -2132,7 +2177,7 @@ nav { flex: 1; position: relative; }
     </svg>
     <span class="mobile-topbar-name">Yellow Pigment</span>
   </div>
-  <span class="mobile-topbar-counter" id="mobile-counter">1 / 15</span>
+  <span class="mobile-topbar-counter" id="mobile-counter">1 / 14</span>
 </header>
 
 <div class="deck">
@@ -2180,17 +2225,17 @@ nav { flex: 1; position: relative; }
         <span class="nav-item" data-slides="9,10,11" id="nav-pipeline">Pipeline</span>
       </div>
       <div class="nav-section">
-        <span class="nav-item" data-slides="12,13" id="nav-market">Market</span>
+        <span class="nav-item" data-slides="12" id="nav-market">Competitive Landscape</span>
       </div>
       <div class="nav-section">
-        <span class="nav-item" data-slides="14" id="nav-moat">Why YPT</span>
+        <span class="nav-item" data-slides="13" id="nav-moat">Why YPT</span>
       </div>
       <div class="nav-section">
-        <span class="nav-item" data-slides="15" id="nav-team">Team &amp; The Ask</span>
+        <span class="nav-item" data-slides="14" id="nav-team">Team &amp; The Ask</span>
       </div>
     </nav>
 
-    <div class="slide-counter">Slide <span id="counter-current">1</span> / 15</div>
+    <div class="slide-counter">Slide <span id="counter-current">1</span> / 14</div>
     <div class="sidebar-footer">Confidential · 2026</div>
   </aside>
 
@@ -2694,17 +2739,82 @@ nav { flex: 1; position: relative; }
       </div>
     </section>
 
-    <!-- ── SLIDE 9: LEAD PROGRAM ─────────────────────────────── -->
+    <!-- ── SLIDE 9: PIPELINE OVERVIEW + MARKET ─────────────────── -->
     <section class="slide" id="s9">
       <div class="slide-inner">
         <span class="section-label">Pipeline</span>
-        <h1 class="slide-title">Lead program: APS as the<br><em>first clinical wedge.</em></h1>
-        <p class="key-message">APS is an attractive initial indication — strongly connected to inflammatory and oxidative stress biology, with a focused development path and a clear bridge to larger markets.</p>
+        <h1 class="slide-title">One engine,<br><em>multiple programs.</em></h1>
+        <p class="key-message">A single chemistry and biology platform generates multiple disease programs targeting some of medicine's largest and most persistent chronic disease markets — with shared infrastructure and expanding optionality.</p>
+
+        <div class="platform-cols">
+          <div class="platform-col">
+            <div class="platform-col-header">
+              <div class="platform-col-label">Clinical Entry</div>
+              <div class="platform-col-title">Inflammatory / APS</div>
+            </div>
+            <div class="platform-col-body">
+              <div class="platform-item">Focused orphan indication — clear mechanism and development path</div>
+              <div class="platform-item">BV-Me₂ as lead compound in screening cascade</div>
+              <div class="platform-item">Human APS data directly supports mechanistic hypothesis</div>
+              <div class="market-callout">
+                <div class="market-callout-eyebrow">Market Opportunity</div>
+                <div class="market-callout-stat">Orphan</div>
+                <div class="market-callout-sub">Focused entry · credible bridge to $100B+ autoimmune &amp; cardiometabolic adjacencies</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="platform-col">
+            <div class="platform-col-header">
+              <div class="platform-col-label">Lead Program</div>
+              <div class="platform-col-title">Metabolic / Obesity</div>
+            </div>
+            <div class="platform-col-body">
+              <div class="platform-item">PPARα modulation — same mechanism, large commercial indication</div>
+              <div class="platform-item">GLP-1 adjunct positioning for lifelong weight control</div>
+              <div class="platform-item">Gilbert epidemiology: lower BMI, better adiposity</div>
+              <div class="market-callout market-callout-gold">
+                <div class="market-callout-eyebrow">Market Opportunity</div>
+                <div class="market-callout-stat">&gt;1B</div>
+                <div class="market-callout-sub">patients worldwide · multi-$10B+ annual obesity &amp; metabolic market</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="platform-col">
+            <div class="platform-col-header">
+              <div class="platform-col-label">Expansion</div>
+              <div class="platform-col-title">Inflammatory &amp; Tissue Repair</div>
+            </div>
+            <div class="platform-col-body">
+              <div class="platform-item">Broader oxidative and inflammatory disease settings</div>
+              <div class="platform-item">Cross-applicable screening, tox, and translational learnings</div>
+              <div class="platform-item">Candidate-specific optimization via HTS library</div>
+              <div class="market-callout market-callout-green">
+                <div class="market-callout-eyebrow">Market Opportunity</div>
+                <div class="market-callout-stat">$100B+</div>
+                <div class="market-callout-sub">annual autoimmune &amp; inflammatory disease market</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-bottom">
+        <span class="bottom-line">One biological engine · multiple programs · major chronic-disease markets. Oral, once-daily format with favorable long-term commercial economics.</span>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 10: APS WEDGE + METABOLIC / OBESITY ─────────────── -->
+    <section class="slide" id="s10">
+      <div class="slide-inner">
+        <span class="section-label">Pipeline</span>
+        <h1 class="slide-title">APS as the first clinical wedge.<br><em>Metabolic / Obesity</em> as the lead commercial program.</h1>
+        <p class="key-message">APS is an attractive initial indication — strongly connected to inflammatory and oxidative stress biology, with a focused development path. Metabolic / Obesity is the large commercial opportunity the platform is designed to reach.</p>
 
         <div class="lead-layout">
           <div class="lead-left">
             <div class="aps-box">
-              <div class="aps-label">Lead Program</div>
+              <div class="aps-label">Clinical Entry</div>
               <div class="aps-title">Anti-Phospholipid Syndrome (APS)</div>
               <div class="aps-body">A systemic autoimmune condition characterized by thrombosis, inflammatory burden, and elevated oxidative stress — with no approved disease-modifying therapy beyond anticoagulation.</div>
               <div style="display:flex;gap:8px;margin-top:6px;">
@@ -2723,88 +2833,26 @@ nav { flex: 1; position: relative; }
           <div class="two-col-divider"></div>
 
           <div class="lead-right">
-            <div style="font-family:var(--font-m);font-size:9px;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;color:var(--soft);margin-bottom:4px;">Expansion pathway</div>
-
-            <div class="expansion-arrow gold-border">
-              <span class="exp-arrow-icon">→</span>
-              <div>
-                <div style="font-family:var(--font-d);font-size:13px;font-weight:700;color:var(--black);margin-bottom:2px;">Cardiometabolic</div>
-                <div style="font-size:12px;color:var(--soft);">PPARα + cardiovascular protection · post-APS credibility drives BD opportunity</div>
+            <div class="aps-box" style="background:var(--green);">
+              <div class="aps-label" style="color:var(--gold);">Lead Commercial Program</div>
+              <div class="aps-title">Metabolic / Obesity — GLP-1 Adjunct</div>
+              <div class="aps-body">A lifelong weight-control therapy positioned alongside incretin-based drugs. PPARα-mediated metabolic effects offer a durable, tolerable oral complement to incretin therapy — enabling sustained weight control across the lifetime of chronic disease.</div>
+              <div style="display:flex;gap:8px;margin-top:6px;">
+                <span class="tag-pill tag-gold">Chronic oral</span>
+                <span style="font-family:var(--font-m);font-size:8.5px;padding:2px 8px;background:rgba(242,239,230,0.15);color:rgba(242,239,230,0.75);border-radius:2px;letter-spacing:0.07em;text-transform:uppercase;">PPARα axis</span>
               </div>
             </div>
 
-            <div class="expansion-arrow green-border">
-              <span class="exp-arrow-icon">→</span>
-              <div>
-                <div style="font-family:var(--font-d);font-size:13px;font-weight:700;color:var(--black);margin-bottom:2px;">Metabolic / Obesity</div>
-                <div style="font-size:12px;color:var(--soft);">GLP-1 adjunct positioning · PPARα axis · large addressable market</div>
-              </div>
-            </div>
-
-            <div class="expansion-arrow" style="border-left-color:rgba(26,26,24,0.15);">
-              <span class="exp-arrow-icon" style="color:rgba(26,26,24,0.2);">→</span>
-              <div>
-                <div style="font-family:var(--font-d);font-size:13px;font-weight:700;color:var(--mid);margin-bottom:2px;">Broader Inflammatory</div>
-                <div style="font-size:12px;color:var(--soft);">Tissue repair, gut-liver axis, and oxidative stress conditions</div>
-              </div>
-            </div>
+            <ul class="bullets">
+              <li><strong style="color:var(--black);">GLP-1 retention gap:</strong> only ~20% of patients remain on therapy after 2 years</li>
+              <li><strong style="color:var(--black);">Early drop-off:</strong> most patients discontinue within 3–6 months of starting</li>
+              <li>YPT adjunct positioning enables sustained weight control beyond the incretin window — a durable oral add-on</li>
+            </ul>
           </div>
         </div>
       </div>
       <div class="slide-bottom">
-        <span class="bottom-line">Start focused. Success in APS creates a highly credible bridge into larger inflammatory and cardiometabolic indications.</span>
-      </div>
-    </section>
-
-    <!-- ── SLIDE 10: PLATFORM EXPANSION ─────────────────────── -->
-    <section class="slide" id="s10">
-      <div class="slide-inner">
-        <span class="section-label">Pipeline</span>
-        <h1 class="slide-title">One engine,<br><em>multiple programs.</em></h1>
-        <p class="key-message">A single chemistry and biology platform generates multiple disease programs over time. Shared infrastructure, cross-applicable learnings, expanding optionality.</p>
-
-        <div class="platform-cols">
-          <div class="platform-col">
-            <div class="platform-col-header">
-              <div class="platform-col-label">Lead Program · Now</div>
-              <div class="platform-col-title">Inflammatory / APS</div>
-            </div>
-            <div class="platform-col-body">
-              <div class="platform-item">APS as focused first indication — clear mechanism and development path</div>
-              <div class="platform-item">BV-Me₂ as lead compound in in vitro and in vivo cascade</div>
-              <div class="platform-item">Human data directly supports mechanistic hypothesis</div>
-              <div class="platform-item">Orphan potential with bridge to cardiometabolic market</div>
-            </div>
-          </div>
-
-          <div class="platform-col">
-            <div class="platform-col-header">
-              <div class="platform-col-label">Expansion 1 · Post-Seed</div>
-              <div class="platform-col-title">Metabolic / Obesity</div>
-            </div>
-            <div class="platform-col-body">
-              <div class="platform-item">PPARα modulation — same mechanism, metabolic indication</div>
-              <div class="platform-item">GLP-1 adjunct positioning for combination use</div>
-              <div class="platform-item">Epidemiological data supports: Gilbert = lower BMI, better adiposity</div>
-              <div class="platform-item">Large addressable market with clear unmet need beyond incretin therapy</div>
-            </div>
-          </div>
-
-          <div class="platform-col">
-            <div class="platform-col-header">
-              <div class="platform-col-label">Expansion 2 · Series A</div>
-              <div class="platform-col-title">Inflammatory &amp; Tissue Repair</div>
-            </div>
-            <div class="platform-col-body">
-              <div class="platform-item">Broader oxidative and inflammatory disease settings</div>
-              <div class="platform-item">Cross-applicable screening, tox, and translational learnings from lead programs</div>
-              <div class="platform-item">Candidate-specific optimization by indication using HTS library</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="slide-bottom">
-        <span class="bottom-line">Not a single-asset story — but we execute like one at the start.</span>
+        <span class="bottom-line">Focused clinical entry in APS · large commercial opportunity in metabolic / obesity.</span>
       </div>
     </section>
 
@@ -2863,47 +2911,10 @@ nav { flex: 1; position: relative; }
       </div>
     </section>
 
-    <!-- ── SLIDE 12: MARKET OPPORTUNITY ────────────────────────── -->
+    <!-- ── SLIDE 12: COMPETITIVE LANDSCAPE ──────────────────────── -->
     <section class="slide" id="s12">
       <div class="slide-inner">
-        <span class="section-label">Market</span>
-        <h1 class="slide-title">Targeting large,<br><em>chronic disease markets.</em></h1>
-        <p class="key-message">Yellow Pigment is pursuing an oral therapeutic platform positioned at the intersection of two of the largest and most persistent disease categories in medicine: autoimmune / inflammatory disease and metabolic disease.</p>
-
-        <div class="market-grid">
-          <div class="market-block">
-            <div class="market-block-eyebrow">Autoimmune &amp; Inflammatory Disease</div>
-            <div class="market-block-stat">$100B+</div>
-            <div class="market-block-title">Annual global market</div>
-            <div class="market-block-body">Large, chronic, high-burden indications with continued need for differentiated mechanisms.</div>
-          </div>
-          <div class="market-block gold-accent">
-            <div class="market-block-eyebrow">Metabolic Disease</div>
-            <div class="market-block-stat">&gt;1B</div>
-            <div class="market-block-title">Patients worldwide</div>
-            <div class="market-block-body">Massive patient scale with growing demand for durable therapies targeting core disease biology.</div>
-          </div>
-          <div class="market-block dark-accent">
-            <div class="market-block-eyebrow">Economically Favorable Drug Profile</div>
-            <div class="market-block-title">Chronic daily oral therapy</div>
-            <div class="market-block-body">Broad patient populations. Long-term treatment duration. Favorable commercial economics for an oral, once-daily format.</div>
-          </div>
-          <div class="market-block mixed-accent">
-            <div class="market-block-eyebrow">Platform Expansion Path</div>
-            <div class="market-block-title">One engine, multiple indications</div>
-            <div class="market-block-body">Autoimmune → Metabolic → Dermatology → Longevity. One core biological engine with the potential to expand across multiple chronic disease settings over time.</div>
-          </div>
-        </div>
-      </div>
-      <div class="slide-bottom">
-        <span class="bottom-line">Opportunity to develop a scalable oral therapy addressing major drivers of chronic disease, including obesity and inflammaging.</span>
-      </div>
-    </section>
-
-    <!-- ── SLIDE 13: COMPETITIVE LANDSCAPE ──────────────────────── -->
-    <section class="slide" id="s13">
-      <div class="slide-inner">
-        <span class="section-label">Market</span>
+        <span class="section-label">Competitive Landscape</span>
         <h1 class="slide-title">Limited direct competition —<br><em>strong biological validation.</em></h1>
         <p class="key-message">The biology is increasingly validated, but the field remains open when it comes to building a chronic, oral therapy designed to safely recreate the protective bilirubin phenotype.</p>
 
@@ -2959,8 +2970,8 @@ nav { flex: 1; position: relative; }
       </div>
     </section>
 
-    <!-- ── SLIDE 14: WHY YPT ──────────────────────────────────── -->
-    <section class="slide" id="s14">
+    <!-- ── SLIDE 13: WHY YPT ──────────────────────────────────── -->
+    <section class="slide" id="s13">
       <div class="slide-inner">
         <span class="section-label">Why Yellow Pigment</span>
         <h1 class="slide-title">Defensibility comes from biology,<br>chemistry, and <em>execution.</em></h1>
@@ -3006,8 +3017,8 @@ nav { flex: 1; position: relative; }
       </div>
     </section>
 
-    <!-- ── SLIDE 15: TEAM & RAISE ────────────────────────────── -->
-    <section class="slide" id="s15">
+    <!-- ── SLIDE 14: TEAM & RAISE ────────────────────────────── -->
+    <section class="slide" id="s14">
       <div class="slide-inner">
         <span class="section-label">Team &amp; The Ask</span>
         <h1 class="slide-title">Experienced founders raising seed capital<br>to reach a <em>major inflection point.</em></h1>
@@ -3042,6 +3053,26 @@ nav { flex: 1; position: relative; }
               </div>
             </div>
 
+            <div style="margin-top:4px;padding-top:14px;border-top:1px solid var(--rule);display:flex;flex-direction:column;gap:10px;">
+              <div style="font-family:var(--font-m);font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--soft);">Advisors</div>
+
+              <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--cream);border:1px solid var(--rule);border-radius:3px;">
+                <img src="/images/stasa.png" alt="Staša Stanković" style="width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+                <div style="flex:1;">
+                  <div style="font-family:var(--font-d);font-size:12px;font-weight:700;color:var(--black);line-height:1.2;">Dr. Staša Stanković</div>
+                  <div style="font-size:10.5px;line-height:1.45;color:var(--soft);margin-top:3px;">OvartiX CEO, Cambridge PhD, AstraZeneca consultant, women's health scientist</div>
+                </div>
+              </div>
+
+              <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--cream);border:1px solid var(--rule);border-radius:3px;">
+                <img src="/images/grmusa.png" alt="Nenad Grmuša" style="width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+                <div style="flex:1;">
+                  <div style="font-family:var(--font-d);font-size:12px;font-weight:700;color:var(--black);line-height:1.2;">Nenad Grmuša</div>
+                  <div style="font-size:10.5px;line-height:1.45;color:var(--soft);margin-top:3px;">DEM BioPharma CEO, former Takeda R&amp;D strategy and external innovation leader</div>
+                </div>
+              </div>
+            </div>
+
           </div>
 
           <div class="two-col-divider"></div>
@@ -3049,7 +3080,7 @@ nav { flex: 1; position: relative; }
           <div class="team-right">
             <div class="raise-box">
               <div class="raise-label">Seed Round</div>
-              <div class="raise-amount">$1.3M</div>
+              <div class="raise-amount">$1.5M</div>
               <div class="raise-type">SAFE · 18-month runway</div>
               <div class="raise-uses">
                 <div class="raise-use-item">Synthesize and screen initial BV-ester library (40+ compounds)</div>
@@ -3103,7 +3134,7 @@ nav { flex: 1; position: relative; }
 </div>
 
 <script>
-const TOTAL = 15;
+const TOTAL = 14;
 let current = 1;
 
 const slides     = document.querySelectorAll('.slide');
@@ -3118,9 +3149,9 @@ const navMap = {
   'nav-science':     [4, 5],
   'nav-platform':    [6, 7, 8],
   'nav-pipeline':    [9, 10, 11],
-  'nav-market':      [12, 13],
-  'nav-moat':        [14],
-  'nav-team':        [15],
+  'nav-market':      [12],
+  'nav-moat':        [13],
+  'nav-team':        [14],
 };
 
 function goTo(n) {
