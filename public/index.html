@@ -617,6 +617,7 @@ nav { flex: 1; position: relative; }
   height: 24px;
   border-radius: 3px;
   overflow: hidden;
+  container-type: inline-size;
 }
 .bili-seg {
   position: relative;
@@ -633,32 +634,57 @@ nav { flex: 1; position: relative; }
   white-space: nowrap;
   pointer-events: none;
 }
-.bili-seg-normal  { background: rgba(26,26,24,0.06); flex: 14; }
+.bili-seg-normal  { background: rgba(26,26,24,0.06); flex: 15; }
 .bili-seg-gilbert {
   background: linear-gradient(135deg, rgba(196,155,30,0.30), rgba(196,155,30,0.16));
   border-top: 1.5px solid rgba(196,155,30,0.55);
   border-bottom: 1.5px solid rgba(196,155,30,0.55);
-  flex: 68;
+  flex: 85;
 }
-.bili-seg-cn2     { background: rgba(26,26,24,0.09); flex: 265; }
+.bili-seg-cn2     { background: rgba(26,26,24,0.09); flex: 250; }
 .bili-seg-cn1     { background: rgba(180,60,40,0.07); flex: 550; }
 .bili-seg-gilbert .bili-seg-label { color: var(--gold-deep); }
 .bili-seg-normal .bili-seg-label,
 .bili-seg-cn2 .bili-seg-label,
 .bili-seg-cn1 .bili-seg-label { color: rgba(26,26,24,0.35); }
+/* Responsive label variants — driven by container queries on .bili-spectrum-bar so they react
+   to the actual bar width (continuous behaviour across all viewport sizes, not viewport breakpoints) */
+.bili-seg-label-short { display: none; }
+.bili-seg-normal .bili-seg-label { display: none; }   /* "Normal" segment is 1.67% of bar — too narrow to fit text on most screens */
+
+/* Bar width ≥ 1450px: full "★ YPT therapeutic window" label fits in the gilbert segment */
+@container (max-width: 1449.98px) {
+  .bili-seg-gilbert .bili-seg-label-full  { display: none; }
+  .bili-seg-gilbert .bili-seg-label-short { display: inline; }
+}
+/* Below ~340px bar width, even "★ YPT" no longer fits in the gilbert segment */
+@container (max-width: 339.98px) {
+  .bili-seg-gilbert .bili-seg-label-short { display: none; }
+}
+/* On very wide bars (≥1800px) the "Normal" segment finally has room for a label */
+@container (min-width: 1800px) {
+  .bili-seg-normal .bili-seg-label { display: inline; }
+}
 .bili-ticks {
+  display: flex;
   position: relative;
   height: 30px;
   margin-top: 1px;
+  container-type: inline-size;
+}
+.bili-tick-cell {
+  position: relative;
 }
 .bili-tick {
   position: absolute;
-  transform: translateX(-50%);
+  top: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1px;
 }
+.bili-tick.bili-tick-left  { left: 0;    transform: translateX(-50%); }
+.bili-tick.bili-tick-right { left: 100%; transform: translateX(-50%); }
 .bili-tick-line {
   width: 1px;
   height: 5px;
@@ -666,8 +692,12 @@ nav { flex: 1; position: relative; }
 }
 .bili-tick-val {
   font-family: var(--font-m);
-  font-size: 8px;
-  color: rgba(26,26,24,0.4);
+  /* Fluid font-size that scales continuously with the actual ticks-container width.
+     cqi = 1% of container inline-size. At a 480px container the preferred value is ~9.1px (clamped to 9 floor);
+     at ~1100px it lands around 10.4px; at ~1500px it lands around 12.8px (clamped to 12 ceiling). */
+  font-size: clamp(9px, calc(0.6cqi + 6px), 12px);
+  font-weight: 700;
+  color: var(--mid);
   white-space: nowrap;
 }
 .bili-axis-label {
@@ -1189,6 +1219,10 @@ nav { flex: 1; position: relative; }
 .market-callout-green .market-callout-eyebrow { color: var(--gold); }
 .market-callout-green .market-callout-stat { color: #fff; }
 .market-callout-green .market-callout-sub { color: rgba(255,255,255,0.78); }
+.market-callout-lightgreen { background: #C8DBC4; }
+.market-callout-lightgreen .market-callout-eyebrow { color: #1F4D38; font-weight: 800; }
+.market-callout-lightgreen .market-callout-stat { color: #14361F; font-weight: 800; }
+.market-callout-lightgreen .market-callout-sub { color: #1A2D20; font-weight: 600; font-size: 11.5px; }
 
 /* ── SLIDE 11 — DEVELOPMENT PLAN ─────────────────────────────── */
 .timeline {
@@ -2052,7 +2086,7 @@ nav { flex: 1; position: relative; }
     -webkit-overflow-scrolling: touch;
   }
 
-  /* Bilirubin spectrum — wrap in scrollable container */
+  /* Bilirubin spectrum — wrap in scrollable container so the bar/ticks keep their geometry on narrow screens */
   .bili-spectrum { overflow-x: auto; }
   .bili-spectrum-bar,
   .bili-ticks { min-width: 480px; }
@@ -2288,7 +2322,7 @@ nav { flex: 1; position: relative; }
         <div class="cover-tag">Seed Round · Confidential · 2026</div>
         <div class="cover-title">Turning a protective<br>human phenotype<br>into medicine.</div>
         <div class="cover-divider"></div>
-        <div class="cover-sub">First-in-class therapeutics for inflammatory and metabolic disease, built on the biology of Gilbert syndrome.</div>
+        <div class="cover-sub">Therapeutics for inflammatory and metabolic disease(s), built on the natural protective biology of Gilbert syndrome.</div>
         <div class="cover-support">Human genetics-inspired drug discovery · Biliverdin-ester prodrug platform</div>
       </div>
 
@@ -2320,7 +2354,7 @@ nav { flex: 1; position: relative; }
             </div>
             <div class="problem-row">
               <div class="problem-dot green"></div>
-              <p><strong>Existing treatments target downstream pathways — few address the underlying oxidative and inflammatory biology</strong></p>
+              <p><strong>Existing treatments target downstream pathways. Few address the underlying oxidative and inflammatory biology</strong></p>
             </div>
           </div>
 
@@ -2335,7 +2369,7 @@ nav { flex: 1; position: relative; }
             </div>
             <div class="problem-row">
               <div class="problem-dot gold"></div>
-              <p>Inflammatory and metabolic dysfunction are tightly linked — driven by shared oxidative stress pathways</p>
+              <p>Inflammatory and metabolic dysfunction are tightly linked, driven by shared oxidative stress pathways</p>
             </div>
             <div class="problem-row">
               <div class="problem-dot gold"></div>
@@ -2353,36 +2387,41 @@ nav { flex: 1; position: relative; }
     <section class="slide" id="s3">
       <div class="slide-inner">
         <span class="section-label">The Opportunity</span>
-        <h1 class="slide-title">Gilbert syndrome is a natural experiment<br>in <em>protective biology.</em></h1>
-        <p class="key-message">~5–10% of people carry Gilbert syndrome — mildly elevated unconjugated bilirubin via UGT1A1 variation. Epidemiological data consistently shows protection across major disease domains.</p>
+        <h1 class="slide-title">Gilbert syndrome is a well-documented natural experiment<br>in <em>protective biology.</em></h1>
+        <p class="key-message">Gilbert syndrome, a benign, common genetic variant of UGT1A1 carried by ~5–10% of the population, produces mildly elevated unconjugated bilirubin. <strong>Decades of human epidemiology, across multiple independent cohorts, show consistent protection across major disease domains.</strong></p>
 
         <div class="evidence-tiles">
           <div class="evidence-tile tile-gold">
-            <div class="evidence-stat gold">−50%</div>
-            <div class="evidence-desc">All-cause mortality in Gilbert syndrome vs. age-matched population controls in large UK cohort study</div>
+            <div class="evidence-stat gold" style="font-size:30px;line-height:1;">−50%</div>
+            <div style="font-family:var(--font-d);font-size:13px;font-weight:700;color:var(--black);margin-top:4px;letter-spacing:-0.005em;">All-cause mortality</div>
+            <div class="evidence-desc" style="margin-top:4px;">In Gilbert syndrome vs. age-matched population controls, large UK cohort study</div>
             <div class="evidence-source">Horsfall LJ et al. 2013 · n &gt; 2,000</div>
           </div>
           <div class="evidence-tile tile-green">
-            <div class="evidence-stat green">−60%</div>
-            <div class="evidence-desc">Coronary heart disease risk in UGT1A1*28 homozygotes vs. wildtype — Framingham Heart Study cohort</div>
+            <div class="evidence-stat green" style="font-size:30px;line-height:1;">−60%</div>
+            <div style="font-family:var(--font-d);font-size:13px;font-weight:700;color:var(--black);margin-top:4px;letter-spacing:-0.005em;">Coronary heart disease risk</div>
+            <div class="evidence-desc" style="margin-top:4px;">In UGT1A1*28 homozygotes vs. wildtype, Framingham Heart Study cohort</div>
             <div class="evidence-source">Lin JP et al. · Framingham</div>
           </div>
           <div class="evidence-tile tile-gold2">
-            <div class="evidence-stat gold" style="font-size:22px;margin-bottom:4px;">Lower BMI &amp; fat mass</div>
+            <div class="evidence-stat gold" style="font-size:22px;margin-bottom:2px;line-height:1.05;">Lower BMI &amp; fat mass</div>
+            <div style="font-family:var(--font-d);font-size:11.5px;font-weight:600;color:var(--mid);margin-bottom:4px;">Metabolic phenotype</div>
             <div class="evidence-desc">Gilbert-range bilirubin associated with lower adiposity and waist circumference, especially in adults ≥ 35 years</div>
             <div class="evidence-source">Seyed Khoei N et al. 2018 · Free Radic Biol Med</div>
           </div>
           <div class="evidence-tile tile-green2">
-            <div class="evidence-stat green" style="font-size:22px;margin-bottom:4px;">Inflammatory Link</div>
-            <div class="evidence-desc">Lower bilirubin tracks with elevated APS inflammatory burden — elevated BR may confer protection in autoimmune states</div>
+            <div class="evidence-stat green" style="font-size:22px;margin-bottom:2px;line-height:1.05;">Inflammatory protection</div>
+            <div style="font-family:var(--font-d);font-size:11.5px;font-weight:600;color:var(--mid);margin-bottom:4px;">Autoimmune signal</div>
+            <div class="evidence-desc">Lower bilirubin tracks with elevated APS inflammatory burden. Elevated BR may confer protection in autoimmune states</div>
             <div class="evidence-source">Multiple cohort studies</div>
           </div>
         </div>
-      </div>
-      <div class="slide-bottom">
-        <div class="takeaway-strip" style="flex:1;">
-          <span class="takeaway-mark">Key Insight</span>
-          <span class="takeaway-text"><strong>Nature has already run the experiment.</strong> Mild bilirubin elevation appears consistently protective — across mortality, cardiovascular, metabolic, and inflammatory domains.</span>
+
+        <div style="margin-top:14px;display:flex;flex-direction:column;gap:6px;">
+          <div style="font-family:var(--font-m);font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold-deep);">Key Insight</div>
+          <div style="padding:16px 22px;background:var(--charcoal);border-radius:3px;border-left:3px solid var(--gold);">
+            <div style="font-family:var(--font-d);font-size:16px;font-weight:700;color:var(--cream);line-height:1.3;letter-spacing:-0.01em;">Nature has already run the experiment — mild bilirubin elevation is consistently protective across mortality, cardiovascular, metabolic, and inflammatory disease.</div>
+          </div>
         </div>
       </div>
     </section>
@@ -2391,8 +2430,8 @@ nav { flex: 1; position: relative; }
     <section class="slide" id="s4">
       <div class="slide-inner">
         <span class="section-label">The Science</span>
-        <h1 class="slide-title">A validated human signal can be<br><em>translated into medicine.</em></h1>
-        <p class="key-message">The bilirubin pathway offers a translational bridge from human genetics to pharmacology — with a clear molecular target and an understood mechanism.</p>
+        <h1 class="slide-title">A validated human pathway can be<br><em>translated into medicine.</em></h1>
+        <p class="key-message">The bilirubin pathway offers a translational bridge from human genetics to pharmacology, with a clear molecular target, an understood mechanism, and a defined therapeutic window with substantial safety margin.</p>
 
         <div class="pathway-row">
           <!-- HEME -->
@@ -2433,7 +2472,7 @@ nav { flex: 1; position: relative; }
             </svg>
             <div class="pw-role" style="color:var(--gold-deep);">⭑ Therapeutic Target</div>
             <div class="pw-name" style="color:var(--gold-deep);">Bilirubin</div>
-            <div class="gilbert-badge">⚑ Gilbert window</div>
+            <div class="gilbert-badge">⚑ Gilbert protective window</div>
           </div>
 
           <div class="pw-arrow">
@@ -2458,60 +2497,15 @@ nav { flex: 1; position: relative; }
             <span class="bili-spectrum-subtitle">Plasma bilirubin (µM)</span>
           </div>
 
-          <!-- Spectrum bar -->
-          <div class="bili-spectrum-bar">
-            <div class="bili-seg bili-seg-normal">
-              <span class="bili-seg-label">Normal</span>
-            </div>
-            <div class="bili-seg bili-seg-gilbert">
-              <span class="bili-seg-label">★ YPT Window</span>
-            </div>
-            <div class="bili-seg bili-seg-cn2">
-              <span class="bili-seg-label">CN-II</span>
-            </div>
-            <div class="bili-seg bili-seg-cn1">
-              <span class="bili-seg-label">CN-I</span>
-            </div>
-          </div>
-
-          <!-- Tick marks -->
-          <div class="bili-ticks">
-            <div class="bili-tick" style="left:0%">
-              <div class="bili-tick-line"></div>
-              <div class="bili-tick-val">0</div>
-            </div>
-            <div class="bili-tick" style="left:1.9%">
-              <div class="bili-tick-line"></div>
-              <div class="bili-tick-val">17</div>
-            </div>
-            <div class="bili-tick" style="left:9.4%">
-              <div class="bili-tick-line" style="background:rgba(154,119,16,0.5)"></div>
-              <div class="bili-tick-val" style="color:var(--gold-deep)">85</div>
-            </div>
-            <div class="bili-tick" style="left:11.1%">
-              <div class="bili-tick-line"></div>
-              <div class="bili-tick-val">100</div>
-            </div>
-            <div class="bili-tick" style="left:38.9%">
-              <div class="bili-tick-line"></div>
-              <div class="bili-tick-val">350</div>
-            </div>
-            <div class="bili-tick" style="left:100%">
-              <div class="bili-tick-line"></div>
-              <div class="bili-tick-val">900</div>
-            </div>
-            <div class="bili-axis-label">µM →</div>
-          </div>
-
-          <!-- Range cards -->
-          <div class="bili-range-cards">
+          <!-- Range cards (presented first to anchor the conditions) -->
+          <div class="bili-range-cards" style="margin-bottom:14px;">
             <div class="bili-range-card">
               <div class="bili-range-name">Normal</div>
               <div class="bili-range-val">3.4 – 17 µM</div>
             </div>
             <div class="bili-range-card highlight">
-              <div class="bili-range-name">Gilbert Syndrome ★ YPT Window</div>
-              <div class="bili-range-val">17 – 85 µM</div>
+              <div class="bili-range-name">Gilbert protective window<br>★ YPT therapeutic window</div>
+              <div class="bili-range-val">15 – 100 µM</div>
             </div>
             <div class="bili-range-card">
               <div class="bili-range-name">Crigler-Najjar II</div>
@@ -2522,25 +2516,121 @@ nav { flex: 1; position: relative; }
               <div class="bili-range-val">350 – 900 µM</div>
             </div>
           </div>
+
+          <!-- Spectrum bar (enlarged for prominence) -->
+          <div class="bili-spectrum-bar" style="height:34px;">
+            <div class="bili-seg bili-seg-normal">
+              <span class="bili-seg-label bili-seg-label-full">Normal</span>
+            </div>
+            <div class="bili-seg bili-seg-gilbert">
+              <span class="bili-seg-label bili-seg-label-full">★ YPT therapeutic window</span>
+              <span class="bili-seg-label bili-seg-label-short">★ YPT</span>
+            </div>
+            <div class="bili-seg bili-seg-cn2">
+              <span class="bili-seg-label bili-seg-label-full">CN-II</span>
+            </div>
+            <div class="bili-seg bili-seg-cn1">
+              <span class="bili-seg-label bili-seg-label-full">CN-I</span>
+            </div>
+          </div>
+
+          <!-- Tick marks (flex-based — proportions mirror the bar segments above for guaranteed alignment at any width) -->
+          <div class="bili-ticks">
+            <div class="bili-tick-cell" style="flex:15;">
+              <div class="bili-tick bili-tick-left">
+                <div class="bili-tick-line"></div>
+                <div class="bili-tick-val">0</div>
+              </div>
+              <div class="bili-tick bili-tick-right">
+                <div class="bili-tick-line"></div>
+                <div class="bili-tick-val">15</div>
+              </div>
+            </div>
+            <div class="bili-tick-cell" style="flex:85;">
+              <div class="bili-tick bili-tick-right">
+                <div class="bili-tick-line"></div>
+                <div class="bili-tick-val">100</div>
+              </div>
+            </div>
+            <div class="bili-tick-cell" style="flex:250;">
+              <div class="bili-tick bili-tick-right">
+                <div class="bili-tick-line"></div>
+                <div class="bili-tick-val">350</div>
+              </div>
+            </div>
+            <div class="bili-tick-cell" style="flex:550;">
+              <div class="bili-tick bili-tick-right">
+                <div class="bili-tick-line"></div>
+                <div class="bili-tick-val">900</div>
+              </div>
+            </div>
+            <div class="bili-axis-label">µM →</div>
+          </div>
+
+          <!-- Safety distance callout -->
+          <div style="margin-top:12px;padding:10px 16px;background:rgba(45,106,79,0.08);border-left:3px solid var(--green);border-radius:2px;display:flex;align-items:center;gap:14px;">
+            <div style="font-family:var(--font-m);font-size:9.5px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--green);white-space:nowrap;">Safety Margin</div>
+            <div style="font-family:var(--font-d);font-size:12px;font-weight:600;color:var(--mid);line-height:1.4;">From the upper bound of the YPT window (~100 µM) to severe hyperbilirubinemia (~350 µM CN-II), there is a <strong style="color:var(--black);">~3.5× distance</strong>, substantial pharmacological headroom for controlled bilirubin elevation.</div>
+          </div>
         </div>
       </div>
       <div class="slide-bottom">
-        <span class="bottom-line">The goal is not hyperbilirubinemia — it is controlled access to the Gilbert protective window.</span>
+        <span class="bottom-line">The goal is not hyperbilirubinemia. It is controlled access to the Gilbert protective window with a wide safety margin.</span>
       </div>
     </section>
 
-    <!-- ── SLIDE 5: WHY NOT A DRUG ───────────────────────────── -->
+    <!-- ── SLIDE 5: BIOLOGY MECHANISM (was old s7) ───────────── -->
     <section class="slide" id="s5">
       <div class="slide-inner">
         <span class="section-label">The Science</span>
+        <h1 class="slide-title">Bilirubin biology explains<br>the <em>Gilbert protective phenotype.</em></h1>
+        <p class="key-message">The protection observed in Gilbert syndrome is not coincidence. It is mechanistically driven. Mildly elevated bilirubin acts through four convergent biological axes that together explain the breadth of protection seen across mortality, cardiovascular, metabolic, and inflammatory disease.</p>
+
+        <div class="moa-layout">
+          <div class="moa-cell moa-gold">
+            <div class="moa-num">01</div>
+            <div class="moa-title">PPARα Modulation</div>
+            <div class="moa-body">Bilirubin acts as an endogenous PPARα ligand, activating fatty acid oxidation and regulating lipid homeostasis. This is the mechanistic basis for metabolic protection in Gilbert individuals.</div>
+            <span class="moa-tag tag-gold">Metabolic axis</span>
+          </div>
+          <div class="moa-cell moa-green">
+            <div class="moa-num">02</div>
+            <div class="moa-title">Lipophilic Antioxidant</div>
+            <div class="moa-body">BR intercepts peroxyl radicals in lipid membranes, a compartment inaccessible to water-soluble antioxidants. The BV → BR → BV redox cycle amplifies capacity beyond stoichiometric ratios.</div>
+            <span class="moa-tag tag-green">Oxidative stress</span>
+          </div>
+          <div class="moa-cell moa-gold">
+            <div class="moa-num">03</div>
+            <div class="moa-title">BLVRA Signaling</div>
+            <div class="moa-body">Biliverdin reductase A is a dual-function kinase. Beyond BV reduction, it modulates insulin receptor signaling (IRS-1/PI3K) and NFκB, placing it centrally in metabolic and inflammatory control.</div>
+            <span class="moa-tag tag-gold">Signaling axis</span>
+          </div>
+          <div class="moa-cell moa-green">
+            <div class="moa-num">04</div>
+            <div class="moa-title">Microbial Modulation</div>
+            <div class="moa-body">BV and BR exhibit anti-viral and anti-bacterial activity at epithelial barriers, supporting immune homeostasis. Emerging evidence links Gilbert-range BR to favourable host-microbial interaction profiles.</div>
+            <span class="moa-tag tag-green">Host–microbiome axis</span>
+          </div>
+        </div>
+      </div>
+      <div class="slide-bottom">
+        <span class="bottom-line">Four convergent biological mechanisms explain the Gilbert protective phenotype — and define the molecular targets a bilirubin-elevating therapy can engage.</span>
+        <span style="font-family:var(--font-m);font-size:9px;color:var(--soft);margin-left:auto;">5–10% global Gilbert carrier rate · 4 convergent mechanisms</span>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 6: WHY NOT A DRUG (was old s5) ──────────────── -->
+    <section class="slide" id="s6">
+      <div class="slide-inner">
+        <span class="section-label">Platform</span>
         <h1 class="slide-title">Why bilirubin has not yet become<br>a <em>practical drug.</em></h1>
         <p class="key-message">The therapeutic signal is real. But bilirubin itself has been difficult to translate into a scalable, orally delivered medicine.</p>
 
         <div class="three-part">
           <div class="three-part-block">
-            <div class="three-part-num">01 — Signal</div>
-            <div class="three-part-title">Compelling biology</div>
-            <div class="three-part-body">Strong epidemiological evidence across mortality, cardiovascular, metabolic, and inflammatory disease. Multiple mechanisms. Clear human phenotype. The biology works.</div>
+            <div class="three-part-num" style="font-size:11px;letter-spacing:0.2em;color:var(--gold-deep);font-weight:800;">01 — Signal</div>
+            <div class="three-part-title" style="font-size:18px;color:var(--black);font-weight:700;">Compelling biology</div>
+            <div class="three-part-body" style="font-size:13px;color:var(--mid);line-height:1.5;">Strong epidemiological evidence across mortality, cardiovascular, metabolic, and inflammatory disease. Multiple mechanisms. Clear human phenotype. The biology works.</div>
             <div style="margin-top:auto;padding-top:12px;">
               <span class="tag-pill tag-green">Validated in humans</span>
             </div>
@@ -2549,23 +2639,23 @@ nav { flex: 1; position: relative; }
           <div class="three-part-arrow">→</div>
 
           <div class="three-part-block problem-block">
-            <div class="three-part-num">02 — Problem</div>
-            <div class="three-part-title" style="color:var(--mid);">Delivery bottleneck</div>
-            <div class="three-part-body">Bilirubin itself is chemically difficult. Most published attempts use injectable, infusion, or nanoparticle approaches — limiting utility for chronic disease.</div>
+            <div class="three-part-num" style="font-size:11px;letter-spacing:0.2em;color:var(--gold-deep);font-weight:800;">02 — Problem</div>
+            <div class="three-part-title" style="font-size:18px;color:var(--black);font-weight:700;">Delivery bottleneck</div>
+            <div class="three-part-body" style="font-size:13px;color:var(--mid);line-height:1.5;">Bilirubin itself is chemically difficult. Most published attempts use injectable, infusion, or nanoparticle approaches that limit utility for chronic disease.</div>
             <div class="problem-tags">
-              <div class="problem-tag">Poor aqueous solubility</div>
-              <div class="problem-tag">Chemical instability</div>
-              <div class="problem-tag">Hard formulation</div>
-              <div class="problem-tag">Rapid degradation by gut microbiome</div>
+              <div class="problem-tag" style="font-size:11.5px;color:var(--black);font-weight:600;background:rgba(26,26,24,0.07);padding:8px 11px;display:flex;gap:9px;align-items:flex-start;line-height:1.35;"><span style="color:var(--gold-deep);font-weight:800;letter-spacing:0.04em;flex-shrink:0;">A.</span><span>Poor aqueous solubility</span></div>
+              <div class="problem-tag" style="font-size:11.5px;color:var(--black);font-weight:600;background:rgba(26,26,24,0.07);padding:8px 11px;display:flex;gap:9px;align-items:flex-start;line-height:1.35;"><span style="color:var(--gold-deep);font-weight:800;letter-spacing:0.04em;flex-shrink:0;">B.</span><span>Chemical instability</span></div>
+              <div class="problem-tag" style="font-size:11.5px;color:var(--black);font-weight:600;background:rgba(26,26,24,0.07);padding:8px 11px;display:flex;gap:9px;align-items:flex-start;line-height:1.35;"><span style="color:var(--gold-deep);font-weight:800;letter-spacing:0.04em;flex-shrink:0;">C.</span><span>Hard formulation</span></div>
+              <div class="problem-tag" style="font-size:11.5px;color:var(--black);font-weight:600;background:rgba(26,26,24,0.07);padding:8px 11px;display:flex;gap:9px;align-items:flex-start;line-height:1.35;"><span style="color:var(--gold-deep);font-weight:800;letter-spacing:0.04em;flex-shrink:0;">D.</span><span>Rapid degradation by gut microbiome</span></div>
             </div>
           </div>
 
           <div class="three-part-arrow">→</div>
 
           <div class="three-part-block highlighted">
-            <div class="three-part-num" style="color:var(--gold-deep);">03 — Opportunity</div>
-            <div class="three-part-title three-part-title gold">Oral prodrug strategy</div>
-            <div class="three-part-body">A drug design strategy that masks the problematic chemical features of bilirubin — while preserving access to its biology. Delivered orally. Suitable for chronic use.</div>
+            <div class="three-part-num" style="color:var(--gold-deep);font-size:11px;letter-spacing:0.2em;font-weight:800;">03 — Opportunity</div>
+            <div class="three-part-title three-part-title gold" style="font-size:18px;font-weight:700;">Oral prodrug strategy</div>
+            <div class="three-part-body" style="font-size:13px;color:var(--mid);line-height:1.5;">A drug design strategy that masks the problematic chemical features of bilirubin while preserving access to its biology. Delivered orally. Suitable for chronic use.</div>
             <div style="margin-top:auto;padding-top:12px;">
               <span class="tag-pill tag-gold">YPT's approach</span>
             </div>
@@ -2577,41 +2667,41 @@ nav { flex: 1; position: relative; }
       </div>
     </section>
 
-    <!-- ── SLIDE 6: OUR SOLUTION ─────────────────────────────── -->
-    <section class="slide" id="s6">
+    <!-- ── SLIDE 7: OUR SOLUTION (BV-ESTER PRODRUGS, was old s6) ── -->
+    <section class="slide" id="s7">
       <div class="slide-inner">
         <span class="section-label">Platform</span>
         <h1 class="slide-title">Yellow Pigment is building<br><em>biliverdin-ester prodrugs.</em></h1>
-        <p class="key-message">Biliverdin-esters are a practical drug design strategy to access bilirubin biology in a tractable, developable format — suitable for oral delivery and chronic use.</p>
+        <p class="key-message">Biliverdin-esters are a practical drug design strategy to access bilirubin biology in a tractable, developable format suitable for oral delivery and chronic use.</p>
 
-        <div class="prodrug-flow">
+        <div class="prodrug-flow" style="gap:18px;margin:20px 0;">
           <div class="prodrug-node">
-            <div class="prodrug-box pb-ester">BV-Ester<br><span style="font-size:10px;opacity:0.6;font-family:var(--font-m);">Prodrug</span></div>
-            <div class="prodrug-node-label">Oral dose<br>GI lumen</div>
+            <div class="prodrug-box pb-ester" style="font-size:14px;padding:18px 14px;min-width:96px;font-weight:700;">BV-Ester<br><span style="font-size:11px;opacity:0.75;font-family:var(--font-m);font-weight:400;">Prodrug</span></div>
+            <div class="prodrug-node-label" style="font-size:11px;margin-top:10px;">Oral dose<br>GI lumen</div>
           </div>
           <div class="prodrug-arrow">
             <div class="prodrug-line"></div>
-            <div class="prodrug-enzyme g">Esterase</div>
+            <div class="prodrug-enzyme g" style="font-size:11px;font-weight:700;">Esterase</div>
           </div>
           <div class="prodrug-node">
-            <div class="prodrug-box pb-bv">Biliverdin<br><span style="font-size:10px;opacity:0.6;font-family:var(--font-m);">BV</span></div>
-            <div class="prodrug-node-label">Absorbed<br>Systemic</div>
+            <div class="prodrug-box pb-bv" style="font-size:14px;padding:18px 14px;min-width:96px;font-weight:700;">Biliverdin<br><span style="font-size:11px;opacity:0.75;font-family:var(--font-m);font-weight:400;">BV</span></div>
+            <div class="prodrug-node-label" style="font-size:11px;margin-top:10px;">Absorbed<br>Systemic</div>
           </div>
           <div class="prodrug-arrow">
             <div class="prodrug-line"></div>
-            <div class="prodrug-enzyme gd">BLVRA/B</div>
+            <div class="prodrug-enzyme gd" style="font-size:11px;font-weight:700;">BLVRA/B</div>
           </div>
           <div class="prodrug-node">
-            <div class="prodrug-box pb-br">Bilirubin<br><span style="font-size:10px;opacity:0.6;font-family:var(--font-m);">BR</span></div>
-            <div class="prodrug-node-label">Active<br>Pharmacology</div>
+            <div class="prodrug-box pb-br" style="font-size:14px;padding:18px 14px;min-width:96px;font-weight:700;">Bilirubin<br><span style="font-size:11px;opacity:0.75;font-family:var(--font-m);font-weight:400;">BR</span></div>
+            <div class="prodrug-node-label" style="font-size:11px;margin-top:10px;">Active<br>Pharmacology</div>
           </div>
           <div class="prodrug-arrow">
             <div class="prodrug-line"></div>
-            <div class="prodrug-enzyme" style="color:var(--soft);">UGT1A1</div>
+            <div class="prodrug-enzyme" style="color:var(--soft);font-size:11px;font-weight:700;">UGT1A1</div>
           </div>
           <div class="prodrug-node">
-            <div class="prodrug-box pb-effect" style="font-size:11px;">Therapeutic<br>Effect</div>
-            <div class="prodrug-node-label">Gilbert-range<br>biology</div>
+            <div class="prodrug-box pb-effect" style="font-size:13px;padding:18px 14px;min-width:96px;font-weight:700;">Therapeutic<br>Effect</div>
+            <div class="prodrug-node-label" style="font-size:11px;margin-top:10px;">Gilbert-range<br>biology</div>
           </div>
         </div>
 
@@ -2636,46 +2726,6 @@ nav { flex: 1; position: relative; }
       </div>
       <div class="slide-bottom">
         <span class="bottom-line">A chemistry strategy designed for druggability, oral delivery, and mechanistic relevance.</span>
-      </div>
-    </section>
-
-    <!-- ── SLIDE 7: MECHANISM ────────────────────────────────── -->
-    <section class="slide" id="s7">
-      <div class="slide-inner">
-        <span class="section-label">Platform</span>
-        <h1 class="slide-title">Bilirubin biology acts across metabolism,<br>inflammation, and <em>tissue protection.</em></h1>
-        <p class="key-message">This is a pleiotropic mechanism. One biology with multiple pharmacological entry points across major disease categories.</p>
-
-        <div class="moa-layout">
-          <div class="moa-cell moa-gold">
-            <div class="moa-num">01</div>
-            <div class="moa-title">PPARα Modulation</div>
-            <div class="moa-body">Bilirubin acts as an endogenous PPARα ligand, activating fatty acid oxidation and regulating lipid homeostasis — the mechanistic basis for metabolic protection in Gilbert individuals.</div>
-            <span class="moa-tag tag-gold">Metabolic axis</span>
-          </div>
-          <div class="moa-cell moa-green">
-            <div class="moa-num">02</div>
-            <div class="moa-title">Lipophilic Antioxidant</div>
-            <div class="moa-body">BR intercepts peroxyl radicals in lipid membranes — a compartment inaccessible to water-soluble antioxidants. The BV → BR → BV redox cycle amplifies capacity beyond stoichiometric ratios.</div>
-            <span class="moa-tag tag-green">Oxidative stress</span>
-          </div>
-          <div class="moa-cell moa-gold">
-            <div class="moa-num">03</div>
-            <div class="moa-title">BLVRA Signaling</div>
-            <div class="moa-body">Biliverdin reductase A is a dual-function kinase. Beyond BV reduction, it modulates insulin receptor signaling (IRS-1/PI3K) and NFκB — placing it centrally in metabolic and inflammatory control.</div>
-            <span class="moa-tag tag-gold">Signaling axis</span>
-          </div>
-          <div class="moa-cell moa-green">
-            <div class="moa-num">04</div>
-            <div class="moa-title">Microbial Modulation</div>
-            <div class="moa-body">BV and BR exhibit anti-viral and anti-bacterial activity at epithelial barriers, supporting immune homeostasis. Emerging evidence links Gilbert-range BR to favourable host-microbial interaction profiles.</div>
-            <span class="moa-tag tag-green">Host–microbiome axis</span>
-          </div>
-        </div>
-      </div>
-      <div class="slide-bottom">
-        <span class="bottom-line">One biology. Multiple therapeutic entry points across metabolic, inflammatory, and tissue-repair disease.</span>
-        <span style="font-family:var(--font-m);font-size:9px;color:var(--soft);margin-left:auto;">5–10% global Gilbert carrier rate · 4 mechanisms · 3 programs</span>
       </div>
     </section>
 
@@ -2744,7 +2794,7 @@ nav { flex: 1; position: relative; }
       <div class="slide-inner">
         <span class="section-label">Pipeline</span>
         <h1 class="slide-title">One engine,<br><em>multiple programs.</em></h1>
-        <p class="key-message">A single chemistry and biology platform generates multiple disease programs targeting some of medicine's largest and most persistent chronic disease markets — with shared infrastructure and expanding optionality.</p>
+        <p class="key-message">A single chemistry and biology platform generates multiple disease programs targeting some of medicine's largest and most persistent chronic disease markets.</p>
 
         <div class="platform-cols">
           <div class="platform-col">
@@ -2753,8 +2803,8 @@ nav { flex: 1; position: relative; }
               <div class="platform-col-title">Inflammatory / APS</div>
             </div>
             <div class="platform-col-body">
-              <div class="platform-item">Focused orphan indication — clear mechanism and development path</div>
-              <div class="platform-item">BV-Me₂ as lead compound in screening cascade</div>
+              <div class="platform-item">Focused orphan indication with clear mechanism and development path</div>
+              <div class="platform-item">Standard-of-care treatment remains poorly defined in important APS settings, with no approved disease-modifying therapy beyond anticoagulation</div>
               <div class="platform-item">Human APS data directly supports mechanistic hypothesis</div>
               <div class="market-callout">
                 <div class="market-callout-eyebrow">Market Opportunity</div>
@@ -2770,10 +2820,10 @@ nav { flex: 1; position: relative; }
               <div class="platform-col-title">Metabolic / Obesity</div>
             </div>
             <div class="platform-col-body">
-              <div class="platform-item">PPARα modulation — same mechanism, large commercial indication</div>
+              <div class="platform-item">PPARα agonism and antioxidant activity, established mechanisms linked to lower adiposity and improved metabolic health</div>
               <div class="platform-item">GLP-1 adjunct positioning for lifelong weight control</div>
               <div class="platform-item">Gilbert epidemiology: lower BMI, better adiposity</div>
-              <div class="market-callout market-callout-gold">
+              <div class="market-callout market-callout-green">
                 <div class="market-callout-eyebrow">Market Opportunity</div>
                 <div class="market-callout-stat">&gt;1B</div>
                 <div class="market-callout-sub">patients worldwide · multi-$10B+ annual obesity &amp; metabolic market</div>
@@ -2790,7 +2840,7 @@ nav { flex: 1; position: relative; }
               <div class="platform-item">Broader oxidative and inflammatory disease settings</div>
               <div class="platform-item">Cross-applicable screening, tox, and translational learnings</div>
               <div class="platform-item">Candidate-specific optimization via HTS library</div>
-              <div class="market-callout market-callout-green">
+              <div class="market-callout market-callout-lightgreen">
                 <div class="market-callout-eyebrow">Market Opportunity</div>
                 <div class="market-callout-stat">$100B+</div>
                 <div class="market-callout-sub">annual autoimmune &amp; inflammatory disease market</div>
@@ -2800,7 +2850,7 @@ nav { flex: 1; position: relative; }
         </div>
       </div>
       <div class="slide-bottom">
-        <span class="bottom-line">One biological engine · multiple programs · major chronic-disease markets. Oral, once-daily format with favorable long-term commercial economics.</span>
+        <span class="bottom-line">One platform targeting major chronic-disease markets through an oral, once-daily format suited to long-duration therapy.</span>
       </div>
     </section>
 
@@ -2809,14 +2859,14 @@ nav { flex: 1; position: relative; }
       <div class="slide-inner">
         <span class="section-label">Pipeline</span>
         <h1 class="slide-title">APS as the first clinical wedge.<br><em>Metabolic / Obesity</em> as the lead commercial program.</h1>
-        <p class="key-message">APS is an attractive initial indication — strongly connected to inflammatory and oxidative stress biology, with a focused development path. Metabolic / Obesity is the large commercial opportunity the platform is designed to reach.</p>
+        <p class="key-message">APS is an attractive initial indication, strongly connected to inflammatory and oxidative stress biology, with a focused development path. Metabolic / Obesity is the large commercial opportunity the platform is designed to reach.</p>
 
         <div class="lead-layout">
           <div class="lead-left">
             <div class="aps-box">
               <div class="aps-label">Clinical Entry</div>
               <div class="aps-title">Anti-Phospholipid Syndrome (APS)</div>
-              <div class="aps-body">A systemic autoimmune condition characterized by thrombosis, inflammatory burden, and elevated oxidative stress — with no approved disease-modifying therapy beyond anticoagulation.</div>
+              <div class="aps-body">A systemic autoimmune condition characterized by thrombosis, inflammatory burden, and elevated oxidative stress. No approved disease-modifying therapy exists beyond anticoagulation.</div>
               <div style="display:flex;gap:8px;margin-top:6px;">
                 <span class="tag-pill tag-gold">Orphan potential</span>
                 <span style="font-family:var(--font-m);font-size:8.5px;padding:2px 8px;background:rgba(45,106,79,0.15);color:rgba(228,237,232,0.6);border-radius:2px;letter-spacing:0.07em;text-transform:uppercase;">Focused entry</span>
@@ -2824,7 +2874,7 @@ nav { flex: 1; position: relative; }
             </div>
 
             <ul class="bullets">
-              <li>Human data in APS links lower bilirubin with higher inflammatory burden — direct mechanistic relevance</li>
+              <li>Human data in APS links lower bilirubin with higher inflammatory burden, with direct mechanistic relevance</li>
               <li>Mechanism aligns with anti-inflammatory and cytoprotective biology of the BV-ester platform</li>
               <li>Small, focused indication with a clear regulatory path vs. launching directly into broad metabolic markets</li>
             </ul>
@@ -2835,8 +2885,8 @@ nav { flex: 1; position: relative; }
           <div class="lead-right">
             <div class="aps-box" style="background:var(--green);">
               <div class="aps-label" style="color:var(--gold);">Lead Commercial Program</div>
-              <div class="aps-title">Metabolic / Obesity — GLP-1 Adjunct</div>
-              <div class="aps-body">A lifelong weight-control therapy positioned alongside incretin-based drugs. PPARα-mediated metabolic effects offer a durable, tolerable oral complement to incretin therapy — enabling sustained weight control across the lifetime of chronic disease.</div>
+              <div class="aps-title">Metabolic / Obesity: GLP-1 Adjunct</div>
+              <div class="aps-body">A lifelong weight-control therapy positioned alongside incretin-based drugs. PPARα-mediated metabolic effects offer a durable, tolerable oral complement to incretin therapy, enabling sustained weight control across the lifetime of chronic disease.</div>
               <div style="display:flex;gap:8px;margin-top:6px;">
                 <span class="tag-pill tag-gold">Chronic oral</span>
                 <span style="font-family:var(--font-m);font-size:8.5px;padding:2px 8px;background:rgba(242,239,230,0.15);color:rgba(242,239,230,0.75);border-radius:2px;letter-spacing:0.07em;text-transform:uppercase;">PPARα axis</span>
@@ -2846,13 +2896,13 @@ nav { flex: 1; position: relative; }
             <ul class="bullets">
               <li><strong style="color:var(--black);">GLP-1 retention gap:</strong> only ~20% of patients remain on therapy after 2 years</li>
               <li><strong style="color:var(--black);">Early drop-off:</strong> most patients discontinue within 3–6 months of starting</li>
-              <li>YPT adjunct positioning enables sustained weight control beyond the incretin window — a durable oral add-on</li>
+              <li>YPT adjunct positioning enables sustained weight control beyond the incretin window, with a durable oral add-on</li>
             </ul>
           </div>
         </div>
       </div>
       <div class="slide-bottom">
-        <span class="bottom-line">Focused clinical entry in APS · large commercial opportunity in metabolic / obesity.</span>
+        <span class="bottom-line">Major commercial opportunity as a lifelong weight-control therapy positioned alongside incretin-based drugs.</span>
       </div>
     </section>
 
@@ -2861,47 +2911,51 @@ nav { flex: 1; position: relative; }
       <div class="slide-inner">
         <span class="section-label">Pipeline</span>
         <h1 class="slide-title">A capital-efficient path to<br><em>candidate nomination.</em></h1>
-        <p class="key-message">The next phase moves from concept to validated lead candidate through a staged screening and preclinical workflow — with clear go/no-go gates at each step.</p>
+        <p class="key-message">A staged <strong>18–30 month</strong> screening and preclinical workflow that moves from concept to validated lead candidate, with explicit, pre-defined go/no-go criteria at each milestone gate.</p>
 
         <div class="timeline">
 
           <div class="timeline-row">
             <div class="timeline-marker gold">1</div>
             <div class="timeline-content">
-              <div class="timeline-title">Library Design &amp; CRO Synthesis</div>
-              <div class="timeline-body">Rational design of BV-ester variants with AI/ML-guided prioritisation. CRO synthesis of initial 20–40 compound library.</div>
+              <div class="timeline-title" style="font-size:15px;">Library Design &amp; CRO Synthesis</div>
+              <div class="timeline-body" style="font-size:12.5px;color:var(--black);font-weight:500;">Rational design of BV-ester variants with AI/ML-guided prioritisation. CRO synthesis of initial 20–40 compound library.</div>
+              <div style="margin-top:6px;font-family:var(--font-m);font-size:10px;color:var(--gold-deep);font-weight:700;letter-spacing:0.04em;">Go criterion: ≥20 synthesizable BV-ester candidates with verified purity ≥95%.</div>
             </div>
-            <div class="timeline-time">4–6 mo</div>
+            <div class="timeline-time" style="font-size:10.5px;font-weight:700;color:var(--mid);">4–6 mo</div>
           </div>
 
           <div class="timeline-row">
             <div class="timeline-marker gold">2</div>
             <div class="timeline-content">
-              <div class="timeline-title">In Vitro Screening Campaign</div>
-              <div class="timeline-body">Human serum esterase activity, membrane permeability assays (HepG2 and Caco-2), PPARα reporter, intracellular and extracellular BLVRA/BLVRB activity, bilirubin secretion activity.</div>
-              <span class="timeline-gate">Milestone 1</span>
+              <div class="timeline-title" style="font-size:15px;">In Vitro Screening Campaign</div>
+              <div class="timeline-body" style="font-size:12.5px;color:var(--black);font-weight:500;">Human serum esterase activity, membrane permeability assays (HepG2 and Caco-2), PPARα reporter, intracellular and extracellular BLVRA/BLVRB activity, bilirubin secretion activity.</div>
+              <span class="timeline-gate" style="font-size:9.5px;">Milestone 1</span>
+              <div style="margin-top:6px;font-family:var(--font-m);font-size:10px;color:var(--gold-deep);font-weight:700;letter-spacing:0.04em;">Go criterion: ≥3 compounds clearing permeability + esterase + PPARα activity thresholds.</div>
             </div>
-            <div class="timeline-time">3–6 mo</div>
+            <div class="timeline-time" style="font-size:10.5px;font-weight:700;color:var(--mid);">3–6 mo</div>
           </div>
 
           <div class="timeline-row">
             <div class="timeline-marker green">3</div>
             <div class="timeline-content">
-              <div class="timeline-title">In Vivo Proof-of-Concept</div>
-              <div class="timeline-body">Mouse APS model (MRL/lpr genetic model and aPL antibody induction).</div>
-              <span class="timeline-gate">Milestone 2</span>
+              <div class="timeline-title" style="font-size:15px;">In Vivo Proof-of-Concept</div>
+              <div class="timeline-body" style="font-size:12.5px;color:var(--black);font-weight:500;">Mouse APS model (MRL/lpr genetic model and aPL antibody induction).</div>
+              <span class="timeline-gate" style="font-size:9.5px;">Milestone 2</span>
+              <div style="margin-top:6px;font-family:var(--font-m);font-size:10px;color:var(--green);font-weight:700;letter-spacing:0.04em;">Go criterion: statistically significant disease-marker reduction vs. vehicle control in APS model.</div>
             </div>
-            <div class="timeline-time">6–12 mo</div>
+            <div class="timeline-time" style="font-size:10.5px;font-weight:700;color:var(--mid);">6–12 mo</div>
           </div>
 
           <div class="timeline-row">
             <div class="timeline-marker green">4</div>
             <div class="timeline-content">
-              <div class="timeline-title">Non-GLP NHP PK/PD and Safety</div>
-              <div class="timeline-body">Intra-animal dose escalation study to achieve target bilirubin range (50–100 μM) and assess safety before IIT or IND-enabling studies. IP filing — composition of matter + method of use. Series A fundraise position.</div>
-              <span class="timeline-gate">Milestone 3</span>
+              <div class="timeline-title" style="font-size:15px;">Non-GLP NHP PK/PD and Safety</div>
+              <div class="timeline-body" style="font-size:12.5px;color:var(--black);font-weight:500;">Intra-animal dose escalation study to achieve target bilirubin range (50–100 μM) and assess safety before IIT or IND-enabling studies. IP filing covers composition of matter and method of use. Series A fundraise position.</div>
+              <span class="timeline-gate" style="font-size:9.5px;">Milestone 3</span>
+              <div style="margin-top:6px;font-family:var(--font-m);font-size:10px;color:var(--green);font-weight:700;letter-spacing:0.04em;">Go criterion: target plasma BR (50–100 µM) achieved with no dose-limiting toxicity in NHP.</div>
             </div>
-            <div class="timeline-time">1–6 mo</div>
+            <div class="timeline-time" style="font-size:10.5px;font-weight:700;color:var(--mid);">1–6 mo</div>
           </div>
 
         </div>
@@ -2915,7 +2969,7 @@ nav { flex: 1; position: relative; }
     <section class="slide" id="s12">
       <div class="slide-inner">
         <span class="section-label">Competitive Landscape</span>
-        <h1 class="slide-title">Limited direct competition —<br><em>strong biological validation.</em></h1>
+        <h1 class="slide-title">Validated biology<br>despite <em>limited direct competition.</em></h1>
         <p class="key-message">The biology is increasingly validated, but the field remains open when it comes to building a chronic, oral therapy designed to safely recreate the protective bilirubin phenotype.</p>
 
         <div class="comp-cols">
@@ -2924,7 +2978,7 @@ nav { flex: 1; position: relative; }
             <div class="comp-col-title">Direct Bilirubin Therapeutics</div>
             <div class="comp-col-body">External validation of the biology — but in a format that limits utility for chronic disease.</div>
             <div class="comp-col-bullets">
-              <div class="comp-bullet"><div class="comp-dot"></div><span>Bilix / BRIXELLE platform — PEGylated bilirubin, i.v., early clinical</span></div>
+              <div class="comp-bullet"><div class="comp-dot"></div><span>Bilix / BRIXELLE platform: PEGylated bilirubin, i.v., early clinical</span></div>
               <div class="comp-bullet"><div class="comp-dot"></div><span>Focused primarily on acute inflammatory indications</span></div>
               <div class="comp-bullet"><div class="comp-dot"></div><span>No approved or clinical-stage oral bilirubin-elevating therapy</span></div>
             </div>
@@ -2944,29 +2998,38 @@ nav { flex: 1; position: relative; }
           <div class="comp-col highlight">
             <div class="comp-col-num">03 — Yellow Pigment</div>
             <div class="comp-col-title">First-in-class oral approach</div>
-            <div class="comp-col-body">Pharmacologically recreating the Gilbert protective phenotype — designed for daily, chronic use.</div>
+            <div class="comp-col-body">Pharmacologically recreating the Gilbert protective phenotype, designed for daily, chronic use.</div>
             <div class="comp-col-bullets">
-              <div class="comp-bullet"><div class="comp-dot"></div><span>Oral BV-ester prodrug platform — unique chemistry approach</span></div>
+              <div class="comp-bullet"><div class="comp-dot"></div><span>Oral BV-ester prodrug platform with unique chemistry approach</span></div>
               <div class="comp-bullet"><div class="comp-dot"></div><span>Designed for chronic disease settings where duration and daily dosing matter</span></div>
               <div class="comp-bullet"><div class="comp-dot"></div><span>Human genetics-validated target with Gilbert syndrome as natural proof of concept</span></div>
             </div>
           </div>
         </div>
 
-        <div class="comp-contrast-bar">
-          <div class="comp-bar-left">
-            <div class="comp-bar-label">Existing field</div>
-            <div class="comp-bar-sub">i.v. · acute · nanoparticle · early clinical</div>
+        <div style="margin-top:12px;border-top:1px solid var(--rule);padding-top:14px;">
+          <div style="display:flex;gap:0;margin-bottom:6px;">
+            <div style="flex:1;text-align:center;padding:0 12px;">
+              <div style="font-family:var(--font-m);font-size:10px;font-weight:800;letter-spacing:0.16em;text-transform:uppercase;color:var(--mid);">Existing field</div>
+            </div>
+            <div style="width:1px;flex-shrink:0;"></div>
+            <div style="flex:1;text-align:center;padding:0 12px;">
+              <div style="font-family:var(--font-m);font-size:10px;font-weight:800;letter-spacing:0.16em;text-transform:uppercase;color:var(--green);">Yellow Pigment</div>
+            </div>
           </div>
-          <div class="comp-bar-mid"></div>
-          <div class="comp-bar-right">
-            <div class="comp-bar-label">Yellow Pigment</div>
-            <div class="comp-bar-sub">oral · chronic · prodrug · daily dosing</div>
+          <div class="comp-contrast-bar" style="margin-top:0;border-top:none;padding-top:0;">
+            <div class="comp-bar-left">
+              <div class="comp-bar-sub" style="font-size:11px;color:var(--mid);font-weight:600;">i.v. · acute · nanoparticle · early clinical</div>
+            </div>
+            <div class="comp-bar-mid"></div>
+            <div class="comp-bar-right">
+              <div class="comp-bar-sub" style="font-size:11px;color:var(--green);font-weight:600;">oral · chronic · prodrug · daily dosing</div>
+            </div>
           </div>
         </div>
       </div>
       <div class="slide-bottom">
-        <span class="bottom-line">Strong external validation of the biology — with a clear gap around oral chronic-disease therapeutics.</span>
+        <span class="bottom-line">Strong external validation of the biology, with a clear gap around oral chronic-disease therapeutics.</span>
       </div>
     </section>
 
@@ -2974,46 +3037,46 @@ nav { flex: 1; position: relative; }
     <section class="slide" id="s13">
       <div class="slide-inner">
         <span class="section-label">Why Yellow Pigment</span>
-        <h1 class="slide-title">Defensibility comes from biology,<br>chemistry, and <em>execution.</em></h1>
-        <p class="key-message">Yellow Pigment combines a differentiated human biology insight with a tractable prodrug chemistry strategy and a focused development plan — across three reinforcing pillars.</p>
+        <h1 class="slide-title">A platform built to convert protective biology<br>into <em>category-defining medicines.</em></h1>
+        <p class="key-message">Yellow Pigment turns one of the strongest human protective phenotypes into a controlled, oral pharmacology platform, positioned to address some of medicine's largest unmet markets through three reinforcing pillars.</p>
 
         <div class="pillars">
           <div class="pillar">
             <div class="pillar-num">I</div>
-            <div class="pillar-title">Human Biology Insight</div>
-            <div class="pillar-body">A hypothesis grounded in one of the most replicated protective phenotypes in human genetics — not a target identified from cell lines or animal models alone.</div>
+            <div class="pillar-title">Human protective biology insight</div>
+            <div class="pillar-body">A hypothesis grounded in one of the most replicated protective phenotypes in human genetics, already validated in millions of Gilbert carriers and not derived from cell lines or animal models alone.</div>
             <div class="pillar-items">
               <div class="pillar-item">Human genetics-validated target</div>
-              <div class="pillar-item">Multiple independent cohort studies</div>
-              <div class="pillar-item">Pleiotropic mechanism across disease areas</div>
+              <div class="pillar-item">Decades of consistent cohort evidence</div>
+              <div class="pillar-item">Pleiotropic protection across disease areas</div>
             </div>
           </div>
 
           <div class="pillar">
             <div class="pillar-num">II</div>
-            <div class="pillar-title">Chemistry Platform</div>
-            <div class="pillar-body">Biliverdin-ester design creates a proprietary optimization space. The prodrug strategy solves the formulation and delivery problem that has blocked prior bilirubin approaches.</div>
+            <div class="pillar-title">Controlled pharmacology through BV-ester prodrugs</div>
+            <div class="pillar-body">A proprietary chemistry strategy that recreates the Gilbert protective window with controlled, oral, daily pharmacology, solving the delivery and formulation problem that has blocked prior bilirubin approaches.</div>
             <div class="pillar-items">
               <div class="pillar-item">BV-ester design library (40+ compounds)</div>
               <div class="pillar-item">Composition-of-matter IP opportunity</div>
-              <div class="pillar-item">Better CMC profile vs. bilirubin free acid</div>
+              <div class="pillar-item">Oral, chronic, daily-dose format</div>
             </div>
           </div>
 
           <div class="pillar">
             <div class="pillar-num">III</div>
-            <div class="pillar-title">Development Engine</div>
-            <div class="pillar-body">A staged screening and preclinical workflow built to move efficiently from compound library to validated candidate — with shared infrastructure across programs.</div>
+            <div class="pillar-title">Platform for major chronic-disease markets</div>
+            <div class="pillar-body">A staged development engine that moves efficiently from screening cascade to validated candidate, with shared infrastructure unlocking commercial reach into multi-$10B+ metabolic, autoimmune, and inflammatory markets.</div>
             <div class="pillar-items">
-              <div class="pillar-item">In vitro screening: permeability + esterase + bioactivity</div>
+              <div class="pillar-item">APS clinical entry → Metabolic / Obesity lead program</div>
               <div class="pillar-item">Cross-applicable tox and translational learnings</div>
-              <div class="pillar-item">Capital-efficient path to Series A</div>
+              <div class="pillar-item">Capital-efficient path to Series A and partnership</div>
             </div>
           </div>
         </div>
       </div>
       <div class="slide-bottom">
-        <span class="bottom-line">A differentiated insight, a tractable chemistry strategy, and a focused path to candidate nomination.</span>
+        <span class="bottom-line">Protective human biology · controlled oral pharmacology · multiple major chronic-disease markets — a platform positioned to define the bilirubin-elevation category.</span>
       </div>
     </section>
 
@@ -3086,7 +3149,7 @@ nav { flex: 1; position: relative; }
                 <div class="raise-use-item">Synthesize and screen initial BV-ester library (40+ compounds)</div>
                 <div class="raise-use-item">Generate in vitro and in vivo proof-of-concept (APS + metabolic models)</div>
                 <div class="raise-use-item">Advance top candidates through early NHP tox work</div>
-                <div class="raise-use-item">Support IP filing — composition of matter + method of use</div>
+                <div class="raise-use-item">Support IP filing for composition of matter and method of use</div>
               </div>
             </div>
 
