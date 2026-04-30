@@ -193,11 +193,26 @@ nav { flex: 1; position: relative; }
 /* ── Slide inner sections ────────────────────────────────────── */
 .slide-inner {
   flex: 1;
+  min-height: 0;            /* allow flex child to shrink below its content height so overflow-y can take effect */
   padding: 52px 60px 40px;
-  overflow: hidden;
+  overflow-y: auto;         /* scroll when content exceeds available height (e.g. on 13" laptops); footer stays pinned */
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(26,26,24,0.18) transparent;
 }
+/* Slim webkit scrollbar so it doesn't clash with the editorial feel of the deck */
+.slide-inner::-webkit-scrollbar { width: 6px; }
+.slide-inner::-webkit-scrollbar-track { background: transparent; }
+.slide-inner::-webkit-scrollbar-thumb {
+  background: rgba(26,26,24,0.16);
+  border-radius: 3px;
+}
+.slide-inner::-webkit-scrollbar-thumb:hover { background: rgba(26,26,24,0.28); }
+.slide.dark .slide-inner { scrollbar-color: rgba(242,239,230,0.2) transparent; }
+.slide.dark .slide-inner::-webkit-scrollbar-thumb { background: rgba(242,239,230,0.18); }
+.slide.dark .slide-inner::-webkit-scrollbar-thumb:hover { background: rgba(242,239,230,0.32); }
 
 .slide-bottom {
   padding: 20px 60px 24px;
