@@ -397,14 +397,141 @@ nav { flex: 1; position: relative; }
   flex: 1;
   margin-top: 8px;
 }
+.problem-cols.three-col {
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
 .problem-col {
   background: var(--cream);
   border: 1px solid var(--rule);
   border-radius: 4px;
-  padding: 28px 24px;
+  padding: 26px 22px;
   display: flex;
   flex-direction: column;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.problem-col::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.problem-col.accent-gold::before { background: var(--gold); }
+.problem-col.accent-green::before { background: var(--green); }
+.problem-col .evidence-stat { font-size: 34px; margin-bottom: 2px; }
+.problem-col-body {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--mid);
+}
+.problem-col-body strong { color: var(--black); }
+
+/* ── SLIDE 11 — CONSUMER-HEALTH REVENUE PATH ─────────────────── */
+.consumer-market-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 14px;
+  margin-top: 14px;
+  padding: 16px 22px;
+  background: var(--cream);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+}
+.consumer-market-cell {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.consumer-market-cell .evidence-stat {
+  font-size: 22px;
+  margin-bottom: 0;
+}
+.consumer-market-cell-label {
+  font-family: var(--font-m);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--soft);
+  line-height: 1.35;
+}
+.consumer-advantages {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  align-items: center;
+}
+
+/* ── SLIDE 13 — PATH TO VALUE TABLE ─────────────────────────── */
+.value-table {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
+  margin-top: 8px;
+}
+.value-row {
+  display: flex;
+  border-bottom: 1px solid var(--rule);
+}
+.value-row:last-child { border-bottom: none; }
+.value-row.header { background: var(--cream); }
+.value-row.highlight { background: rgba(196,155,30,0.10); }
+.value-row.highlight .value-cell { border-right-color: rgba(196,155,30,0.22); }
+.value-cell {
+  padding: 14px 16px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--mid);
+  border-right: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  justify-content: center;
+}
+.value-cell:last-child { border-right: none; }
+.value-cell:nth-child(1) { flex: 1.15; }
+.value-cell:nth-child(2) { flex: 1.4; }
+.value-cell:nth-child(3) { flex: 1.05; }
+.value-cell:nth-child(4) { flex: 1.4; }
+.value-cell.h {
+  font-family: var(--font-m);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--soft);
+  padding: 12px 16px;
+}
+.value-cell.program {
+  font-family: var(--font-d);
+  font-weight: 700;
+  color: var(--black);
+  font-size: 13px;
+}
+.value-row.highlight .value-cell.program { color: var(--gold-deep); }
+.value-sub {
+  font-family: var(--font-m);
+  font-weight: 600;
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  color: var(--soft);
+  text-transform: uppercase;
+}
+.value-note {
+  font-family: var(--font-m);
+  font-size: 9.5px;
+  color: var(--soft);
+  line-height: 1.55;
+  margin-top: 12px;
+  letter-spacing: 0.02em;
+  font-style: italic;
 }
 .problem-col-label {
   font-family: var(--font-m);
@@ -1727,6 +1854,78 @@ nav { flex: 1; position: relative; }
 }
 .milestone-note strong { color: #2D6A4F; }
 
+/* Tranche layout inside the .raise-box (dark surface) */
+.tranche-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(242,239,230,0.10);
+}
+.tranche-row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  background: rgba(242,239,230,0.045);
+  border-left: 2px solid var(--gold);
+  border-radius: 2px;
+}
+.tranche-mark {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 78px;
+  flex-shrink: 0;
+}
+.tranche-num {
+  font-family: var(--font-m);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.tranche-amount {
+  font-family: var(--font-d);
+  font-size: 15px;
+  font-weight: 700;
+  color: rgba(242,239,230,0.95);
+  line-height: 1.1;
+}
+.tranche-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 1px;
+}
+.tranche-eyebrow {
+  font-family: var(--font-m);
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(242,239,230,0.4);
+}
+.tranche-title {
+  font-family: var(--font-d);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: rgba(242,239,230,0.88);
+  line-height: 1.35;
+}
+.tranche-frame {
+  margin-top: 12px;
+  font-family: var(--font-m);
+  font-size: 10.5px;
+  color: rgba(242,239,230,0.5);
+  line-height: 1.55;
+  font-style: italic;
+  letter-spacing: 0.01em;
+}
+
 /* ── Nav arrows ──────────────────────────────────────────────── */
 .nav-arrows {
   position: fixed;
@@ -2226,7 +2425,7 @@ nav { flex: 1; position: relative; }
     </svg>
     <span class="mobile-topbar-name">Yellow Pigment</span>
   </div>
-  <span class="mobile-topbar-counter" id="mobile-counter">1 / 14</span>
+  <span class="mobile-topbar-counter" id="mobile-counter">1 / 17</span>
 </header>
 
 <div class="deck">
@@ -2268,23 +2467,26 @@ nav { flex: 1; position: relative; }
         <span class="nav-item" data-slides="4,5" id="nav-science">The Science</span>
       </div>
       <div class="nav-section">
-        <span class="nav-item" data-slides="6,7,8" id="nav-platform">Platform</span>
+        <span class="nav-item" data-slides="6,7,8,9" id="nav-platform">Platform</span>
       </div>
       <div class="nav-section">
-        <span class="nav-item" data-slides="9,10,11" id="nav-pipeline">Pipeline</span>
+        <span class="nav-item" data-slides="10,11,12" id="nav-pipeline">Pipeline</span>
       </div>
       <div class="nav-section">
-        <span class="nav-item" data-slides="12" id="nav-market">Competitive Landscape</span>
+        <span class="nav-item" data-slides="13,14" id="nav-path-to-value">Path to Value</span>
       </div>
       <div class="nav-section">
-        <span class="nav-item" data-slides="13" id="nav-moat">Why YPT</span>
+        <span class="nav-item" data-slides="15" id="nav-market">Competitive Landscape</span>
       </div>
       <div class="nav-section">
-        <span class="nav-item" data-slides="14" id="nav-team">Team &amp; The Ask</span>
+        <span class="nav-item" data-slides="16" id="nav-moat">Why YPT</span>
+      </div>
+      <div class="nav-section">
+        <span class="nav-item" data-slides="17" id="nav-team">Team &amp; The Ask</span>
       </div>
     </nav>
 
-    <div class="slide-counter">Slide <span id="counter-current">1</span> / 14</div>
+    <div class="slide-counter">Slide <span id="counter-current">1</span> / 17</div>
     <div class="sidebar-footer">Confidential · 2026</div>
   </aside>
 
@@ -2350,46 +2552,36 @@ nav { flex: 1; position: relative; }
     <section class="slide" id="s2">
       <div class="slide-inner">
         <span class="section-label">The Opportunity</span>
-        <h1 class="slide-title">Major inflammatory and metabolic diseases<br>remain <em>poorly served.</em></h1>
-        <p class="key-message">Many chronic conditions still lack therapies that are both mechanistically differentiated and suitable for durable, broad disease modification.</p>
+        <h1 class="slide-title">Metabolic and inflammatory disease is a <em>billion-person market</em> still chasing downstream targets.</h1>
+        <p class="key-message">Obesity, cardiometabolic risk, and chronic inflammation share the same underlying oxidative and inflammatory biology. Today's drugs treat the symptoms. YPT targets the root.</p>
 
-        <div class="problem-cols">
-          <div class="problem-col">
+        <div class="problem-cols three-col">
+          <div class="problem-col accent-gold">
+            <div class="problem-col-label">Obesity &amp; cardiometabolic</div>
             <div>
-              <div class="problem-col-label">Inflammatory Disease</div>
-              <div class="problem-col-title">Chronic inflammation at scale</div>
+              <div class="evidence-stat gold">1B+</div>
+              <div class="problem-col-title">people affected globally</div>
             </div>
-            <div class="problem-row">
-              <div class="problem-dot green"></div>
-              <p>Anti-phospholipid syndrome (APS) remains without FDA-approved disease-modifying therapy beyond anticoagulation</p>
-            </div>
-            <div class="problem-row">
-              <div class="problem-dot green"></div>
-              <p>Systemic inflammatory conditions affect tens of millions globally, with significant morbidity and treatment gaps</p>
-            </div>
-            <div class="problem-row">
-              <div class="problem-dot green"></div>
-              <p><strong>Existing treatments target downstream pathways. Few address the underlying oxidative and inflammatory biology</strong></p>
-            </div>
+            <p class="problem-col-body">Anti-obesity market heading toward <strong>$95 to $130B by 2030</strong>. GLP-1s dominate, yet roughly 60% of lost weight returns within a year of stopping them.</p>
+            <div class="evidence-source">STEP-1 trial extension, Wilding et al. 2022</div>
           </div>
 
-          <div class="problem-col">
+          <div class="problem-col accent-green">
+            <div class="problem-col-label">Inflammaging</div>
             <div>
-              <div class="problem-col-label">Metabolic Disease</div>
-              <div class="problem-col-title">Metabolic dysfunction is epidemic</div>
+              <div class="evidence-stat green">1 in 6</div>
+              <div class="problem-col-title">will be 60+ by 2030</div>
             </div>
-            <div class="problem-row">
-              <div class="problem-dot gold"></div>
-              <p>Obesity, metabolic syndrome, and cardiometabolic risk affect over a billion people globally</p>
+            <p class="problem-col-body">Chronic low-grade inflammation is a central driver of age-related functional decline, and an <strong>aging population keeps expanding demand</strong>.</p>
+          </div>
+
+          <div class="problem-col accent-green">
+            <div class="problem-col-label">Chronic inflammation</div>
+            <div>
+              <div class="evidence-stat green">$127B</div>
+              <div class="problem-col-title">anti-inflammatory market by 2030</div>
             </div>
-            <div class="problem-row">
-              <div class="problem-dot gold"></div>
-              <p>Inflammatory and metabolic dysfunction are tightly linked, driven by shared oxidative stress pathways</p>
-            </div>
-            <div class="problem-row">
-              <div class="problem-dot gold"></div>
-              <p><strong>Chronic low-grade inflammation ("inflammaging") is a central driver of age-related functional decline.</strong></p>
-            </div>
+            <p class="problem-col-body">Current drugs target downstream pathways. <strong>Few reach the underlying oxidative and inflammatory biology.</strong></p>
           </div>
         </div>
       </div>
@@ -2804,8 +2996,47 @@ nav { flex: 1; position: relative; }
       </div>
     </section>
 
-    <!-- ── SLIDE 9: PIPELINE OVERVIEW + MARKET ─────────────────── -->
+    <!-- ── SLIDE 9: DE-RISKED PATH ──────────────────────────────── -->
     <section class="slide" id="s9">
+      <div class="slide-inner">
+        <span class="section-label">Platform</span>
+        <h1 class="slide-title">A known molecule on a <em>de-risked path.</em></h1>
+        <p class="key-message">The hard problem is delivery, not the target. That collapses most of the discovery and early-safety risk that makes drug development slow.</p>
+
+        <div class="moa-layout">
+          <div class="moa-cell moa-gold">
+            <div class="moa-num">01</div>
+            <div class="moa-title">Known, endogenous payload</div>
+            <div class="moa-body">Biliverdin and bilirubin are human metabolites with characterized safety and a well-studied cytoprotective, anti-inflammatory, antioxidant axis.</div>
+            <span class="moa-tag tag-gold">Safety anchor</span>
+          </div>
+          <div class="moa-cell moa-green">
+            <div class="moa-num">02</div>
+            <div class="moa-title">Efficacy pre-validated in humans</div>
+            <div class="moa-body">Gilbert syndrome and elevated serum bilirubin associate with lower cardiometabolic and inflammatory disease risk, giving directional human evidence before dosing.</div>
+            <span class="moa-tag tag-green">Human genetics</span>
+          </div>
+          <div class="moa-cell moa-gold">
+            <div class="moa-num">03</div>
+            <div class="moa-title">Shorter regulatory path</div>
+            <div class="moa-body">Targeting a 505(b)(2) route that leverages existing safety literature.</div>
+            <span class="moa-tag tag-gold">505(b)(2) route</span>
+          </div>
+          <div class="moa-cell moa-green">
+            <div class="moa-num">04</div>
+            <div class="moa-title">Technology compresses the cycle</div>
+            <div class="moa-body">In-silico esterase modeling and generative ester design shrink the design-make-test loop from years to months. Biomarker readouts (serum bilirubin, CRP/IL-6, metabolic markers) enable fast, adaptive early trials.</div>
+            <span class="moa-tag tag-green">AI-accelerated</span>
+          </div>
+        </div>
+      </div>
+      <div class="slide-bottom">
+        <span class="bottom-line">Delivery is the primary problem we solve, and it is a far smaller risk than discovering a new target.</span>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 10: PIPELINE OVERVIEW + MARKET ─────────────────── -->
+    <section class="slide" id="s10">
       <div class="slide-inner">
         <span class="section-label">Pipeline</span>
         <h1 class="slide-title">One engine,<br><em>multiple programs.</em></h1>
@@ -2869,35 +3100,15 @@ nav { flex: 1; position: relative; }
       </div>
     </section>
 
-    <!-- ── SLIDE 10: APS WEDGE + METABOLIC / OBESITY ─────────────── -->
-    <section class="slide" id="s10">
+    <!-- ── SLIDE 11: APS WEDGE + METABOLIC / OBESITY ─────────────── -->
+    <section class="slide" id="s11">
       <div class="slide-inner">
         <span class="section-label">Pipeline</span>
-        <h1 class="slide-title">APS as the first clinical wedge.<br><em>Metabolic / Obesity</em> as the lead commercial program.</h1>
-        <p class="key-message">APS is an attractive initial indication, strongly connected to inflammatory and oxidative stress biology, with a focused development path. Metabolic / Obesity is the large commercial opportunity the platform is designed to reach.</p>
+        <h1 class="slide-title"><em style="color:var(--green);">Metabolic / Obesity</em> as the lead commercial program.<br>APS as the first clinical wedge.</h1>
+        <p class="key-message">Metabolic / Obesity is the large commercial opportunity the platform is designed to reach. APS is an attractive initial indication, strongly connected to inflammatory and oxidative stress biology, with a focused development path.</p>
 
         <div class="lead-layout">
           <div class="lead-left">
-            <div class="aps-box">
-              <div class="aps-label">Clinical Entry</div>
-              <div class="aps-title">Anti-Phospholipid Syndrome (APS)</div>
-              <div class="aps-body">A systemic autoimmune condition characterized by thrombosis, inflammatory burden, and elevated oxidative stress. No approved disease-modifying therapy exists beyond anticoagulation.</div>
-              <div style="display:flex;gap:8px;margin-top:6px;">
-                <span class="tag-pill tag-gold">Orphan potential</span>
-                <span style="font-family:var(--font-m);font-size:8.5px;padding:2px 8px;background:rgba(45,106,79,0.15);color:rgba(228,237,232,0.6);border-radius:2px;letter-spacing:0.07em;text-transform:uppercase;">Focused entry</span>
-              </div>
-            </div>
-
-            <ul class="bullets">
-              <li>Human data in APS links lower bilirubin with higher inflammatory burden, with direct mechanistic relevance</li>
-              <li>Mechanism aligns with anti-inflammatory and cytoprotective biology of the BV-ester platform</li>
-              <li>Small, focused indication with a clear regulatory path vs. launching directly into broad metabolic markets</li>
-            </ul>
-          </div>
-
-          <div class="two-col-divider"></div>
-
-          <div class="lead-right">
             <div class="aps-box" style="background:var(--green);">
               <div class="aps-label" style="color:var(--gold);">Lead Commercial Program</div>
               <div class="aps-title">Metabolic / Obesity: GLP-1 Adjunct</div>
@@ -2914,6 +3125,26 @@ nav { flex: 1; position: relative; }
               <li>YPT adjunct positioning enables sustained weight control beyond the incretin window, with a durable oral add-on</li>
             </ul>
           </div>
+
+          <div class="two-col-divider"></div>
+
+          <div class="lead-right">
+            <div class="aps-box">
+              <div class="aps-label">Clinical Entry</div>
+              <div class="aps-title">Anti-Phospholipid Syndrome (APS)</div>
+              <div class="aps-body">A systemic autoimmune condition characterized by thrombosis, inflammatory burden, and elevated oxidative stress. No approved disease-modifying therapy exists beyond anticoagulation.</div>
+              <div style="display:flex;gap:8px;margin-top:6px;">
+                <span class="tag-pill tag-gold">Orphan potential</span>
+                <span style="font-family:var(--font-m);font-size:8.5px;padding:2px 8px;background:rgba(45,106,79,0.15);color:rgba(228,237,232,0.6);border-radius:2px;letter-spacing:0.07em;text-transform:uppercase;">Focused entry</span>
+              </div>
+            </div>
+
+            <ul class="bullets">
+              <li>Human data in APS links lower bilirubin with higher inflammatory burden, with direct mechanistic relevance</li>
+              <li>Mechanism aligns with anti-inflammatory and cytoprotective biology of the BV-ester platform</li>
+              <li>Small, focused indication with a clear regulatory path vs. launching directly into broad metabolic markets</li>
+            </ul>
+          </div>
         </div>
       </div>
       <div class="slide-bottom">
@@ -2921,10 +3152,59 @@ nav { flex: 1; position: relative; }
       </div>
     </section>
 
-    <!-- ── SLIDE 11: DEVELOPMENT PLAN ───────────────────────── -->
-    <section class="slide" id="s11">
+    <!-- ── SLIDE 12: CONSUMER-HEALTH REVENUE PATH ─────────────── -->
+    <section class="slide" id="s12">
       <div class="slide-inner">
         <span class="section-label">Pipeline</span>
+        <h1 class="slide-title">A faster consumer-health path to <em>early revenue.</em></h1>
+        <p class="key-message">The same platform, IP, and manufacturing base extend into consumer health, where regulatory timelines are far shorter and revenue can arrive years ahead of the therapeutics.</p>
+
+        <div class="problem-cols">
+          <div class="problem-col accent-gold">
+            <div class="problem-col-label">Cosmetics</div>
+            <div class="problem-col-title">Anti-aging night serum</div>
+            <p class="problem-col-body">Biliverdin ester paired with retinol, stabilized with vitamin E and provitamin B5, in a squalane or hyaluronic acid base.</p>
+            <p class="problem-col-body">Mild skin yellowing reads as visible proof that the product is working, <strong>a feature for consumers rather than a flaw</strong>.</p>
+          </div>
+
+          <div class="problem-col accent-green">
+            <div class="problem-col-label">Supplement</div>
+            <div class="problem-col-title">Gut and microbiome support</div>
+            <p class="problem-col-body">Oral natural biliverdin, not the ester, complexed with chlorophyll, phycocyanobilin, and vitamin B12.</p>
+            <p class="problem-col-body"><strong>Structure and function claims</strong> across gut health, intestinal barrier, antioxidant defense, healthy inflammatory balance, and the microbiome.</p>
+          </div>
+        </div>
+
+        <div class="consumer-market-strip">
+          <div class="consumer-market-cell">
+            <div class="evidence-stat gold">$122 to $193B</div>
+            <div class="consumer-market-cell-label">Global skincare, 2025</div>
+          </div>
+          <div class="consumer-market-cell">
+            <div class="evidence-stat green">$8 to $10B</div>
+            <div class="consumer-market-cell-label">Nutricosmetics, 2025, fast growing</div>
+          </div>
+          <div class="consumer-market-cell">
+            <div class="evidence-stat gold">$200 to $210B</div>
+            <div class="consumer-market-cell-label">Dietary supplements, 2025</div>
+          </div>
+        </div>
+
+        <div class="consumer-advantages">
+          <span class="tag-pill tag-gold">First to large-scale CMC</span>
+          <span class="tag-pill tag-gold">Branched, separately licensable IP</span>
+          <span class="tag-pill tag-gold">Visible signal as a consumer benefit</span>
+        </div>
+      </div>
+      <div class="slide-bottom">
+        <span class="bottom-line">Short regulatory timelines and shared IP turn the platform into revenue while the drug programs mature.</span>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 13: DEVELOPMENT PLAN ───────────────────────── -->
+    <section class="slide" id="s13">
+      <div class="slide-inner">
+        <span class="section-label">Path to Value</span>
         <h1 class="slide-title">A capital-efficient path to<br><em>candidate nomination.</em></h1>
         <p class="key-message">A staged <strong>18–30 month</strong> screening and preclinical workflow that moves from concept to validated lead candidate, with explicit, pre-defined go/no-go criteria at each milestone gate.</p>
 
@@ -2980,8 +3260,66 @@ nav { flex: 1; position: relative; }
       </div>
     </section>
 
-    <!-- ── SLIDE 12: COMPETITIVE LANDSCAPE ──────────────────────── -->
-    <section class="slide" id="s12">
+    <!-- ── SLIDE 14: PATH TO VALUE ──────────────────────────────── -->
+    <section class="slide" id="s14">
+      <div class="slide-inner">
+        <span class="section-label">Path to Value</span>
+        <h1 class="slide-title">A staged path from <em>near-term revenue to exit.</em></h1>
+        <p class="key-message">Two complementary engines. Consumer products generate early cash on a short regulatory path. Therapeutic programs are advanced to the point where they are most valuable to an acquirer or partner.</p>
+
+        <div class="value-table">
+          <div class="value-row header">
+            <div class="value-cell h">Program</div>
+            <div class="value-cell h">Regulatory path</div>
+            <div class="value-cell h">Time to value</div>
+            <div class="value-cell h">Primary value realization</div>
+          </div>
+          <div class="value-row highlight">
+            <div class="value-cell program">
+              <div>Consumer</div>
+              <div class="value-sub">Cosmetics &amp; supplements</div>
+            </div>
+            <div class="value-cell">Cosmetic dossier, NDI</div>
+            <div class="value-cell">~2 yrs to first revenue</div>
+            <div class="value-cell">Direct product revenue or partnership</div>
+          </div>
+          <div class="value-row">
+            <div class="value-cell program">
+              <div>Dermatology</div>
+              <div class="value-sub">Topical</div>
+            </div>
+            <div class="value-cell">505(b)(1), rapid PoC</div>
+            <div class="value-cell">Phase 1 to 2</div>
+            <div class="value-cell">Asset sale or partnership</div>
+          </div>
+          <div class="value-row">
+            <div class="value-cell program">
+              <div>Metabolism</div>
+            </div>
+            <div class="value-cell">Maintenance Phase 2, 6-month endpoint</div>
+            <div class="value-cell">~4 yrs to Phase 2</div>
+            <div class="value-cell">Asset sale or partnership</div>
+          </div>
+          <div class="value-row">
+            <div class="value-cell program">
+              <div>Autoimmune</div>
+              <div class="value-sub">Orphan first</div>
+            </div>
+            <div class="value-cell">Orphan (APS), then lupus</div>
+            <div class="value-cell">Phase 1 to 2</div>
+            <div class="value-cell">Asset sale or partnership</div>
+          </div>
+        </div>
+
+        <div class="value-note">Timelines are internal planning estimates contingent on funding, trial design, and regulatory feedback, not commitments. The metabolic Phase 2 timeline assumes a six-month primary endpoint.</div>
+      </div>
+      <div class="slide-bottom">
+        <span class="bottom-line">Consumer revenue in roughly two years funds and validates the platform, while the therapeutics are built to sell or partner after clinical proof of concept.</span>
+      </div>
+    </section>
+
+    <!-- ── SLIDE 15: COMPETITIVE LANDSCAPE ──────────────────────── -->
+    <section class="slide" id="s15">
       <div class="slide-inner">
         <span class="section-label">Competitive Landscape</span>
         <h1 class="slide-title">Validated biology<br>despite <em>limited direct competition.</em></h1>
@@ -3048,8 +3386,8 @@ nav { flex: 1; position: relative; }
       </div>
     </section>
 
-    <!-- ── SLIDE 13: WHY YPT ──────────────────────────────────── -->
-    <section class="slide" id="s13">
+    <!-- ── SLIDE 16: WHY YPT ──────────────────────────────────── -->
+    <section class="slide" id="s16">
       <div class="slide-inner">
         <span class="section-label">Why Yellow Pigment</span>
         <h1 class="slide-title">A platform built to convert protective biology<br>into <em>category-defining medicines.</em></h1>
@@ -3095,8 +3433,8 @@ nav { flex: 1; position: relative; }
       </div>
     </section>
 
-    <!-- ── SLIDE 14: TEAM & RAISE ────────────────────────────── -->
-    <section class="slide" id="s14">
+    <!-- ── SLIDE 17: TEAM & RAISE ────────────────────────────── -->
+    <section class="slide" id="s17">
       <div class="slide-inner">
         <span class="section-label">Team &amp; The Ask</span>
         <h1 class="slide-title">Experienced founders raising seed capital<br>to reach a <em>major inflection point.</em></h1>
@@ -3157,40 +3495,50 @@ nav { flex: 1; position: relative; }
 
           <div class="team-right">
             <div class="raise-box">
-              <div class="raise-label">Seed Round</div>
-              <div class="raise-amount">$1.5M</div>
-              <div class="raise-type">SAFE · 18-month runway</div>
-              <div class="raise-uses">
-                <div class="raise-use-item">Synthesize and screen initial BV-ester library (40+ compounds)</div>
-                <div class="raise-use-item">Generate in vitro and in vivo proof-of-concept (APS + metabolic models)</div>
-                <div class="raise-use-item">Advance top candidates through early NHP tox work</div>
-                <div class="raise-use-item">Support IP filing for composition of matter and method of use</div>
+              <div class="raise-label">Pre-Seed Round</div>
+              <div class="raise-amount">3 x $500k</div>
+              <div class="raise-type">Milestone-tranched SAFEs</div>
+
+              <div class="tranche-list">
+                <div class="tranche-row">
+                  <div class="tranche-mark">
+                    <div class="tranche-num">Tranche 1</div>
+                    <div class="tranche-amount">$500K</div>
+                  </div>
+                  <div class="tranche-body">
+                    <div class="tranche-eyebrow">Unlocks Milestone 1</div>
+                    <div class="tranche-title">In Vitro Screening Campaign</div>
+                  </div>
+                </div>
+
+                <div class="tranche-row">
+                  <div class="tranche-mark">
+                    <div class="tranche-num">Tranche 2</div>
+                    <div class="tranche-amount">$500K</div>
+                  </div>
+                  <div class="tranche-body">
+                    <div class="tranche-eyebrow">Unlocks Milestone 2</div>
+                    <div class="tranche-title">In Vivo Proof-of-Concept</div>
+                  </div>
+                </div>
+
+                <div class="tranche-row">
+                  <div class="tranche-mark">
+                    <div class="tranche-num">Tranche 3</div>
+                    <div class="tranche-amount">$500K</div>
+                  </div>
+                  <div class="tranche-body">
+                    <div class="tranche-eyebrow">Unlocks Milestone 3</div>
+                    <div class="tranche-title">Non-GLP NHP PK/PD and Safety</div>
+                  </div>
+                </div>
               </div>
+
+              <div class="tranche-frame">A small first check that scales in as risk retires, each tranche gated to an objective milestone.</div>
             </div>
 
             <div class="milestone-note">
               <strong>Goal:</strong> Nominate a Yellow Pigment development candidate and position the company for <strong>Series A financing</strong> or strategic partnering with a biopharmaceutical partner.
-            </div>
-
-            <div style="padding:14px 16px;background:var(--cream);border:1px solid var(--rule);border-radius:3px;">
-              <div style="font-family:var(--font-m);font-size:9px;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;color:var(--soft);margin-bottom:8px;">Key milestones funded</div>
-              <div style="display:flex;flex-direction:column;gap:5px;">
-                <div style="display:flex;gap:8px;font-size:12px;color:var(--mid);align-items:center;">
-                  <span style="color:var(--green);font-size:10px;">✓</span> Library design + CRO synthesis
-                </div>
-                <div style="display:flex;gap:8px;font-size:12px;color:var(--mid);align-items:center;">
-                  <span style="color:var(--green);font-size:10px;">✓</span> In vitro screening cascade
-                </div>
-                <div style="display:flex;gap:8px;font-size:12px;color:var(--mid);align-items:center;">
-                  <span style="color:var(--green);font-size:10px;">✓</span> In vivo efficacy (mouse APS + DIO)
-                </div>
-                <div style="display:flex;gap:8px;font-size:12px;color:var(--mid);align-items:center;">
-                  <span style="color:var(--green);font-size:10px;">✓</span> IP portfolio filing
-                </div>
-                <div style="display:flex;gap:8px;font-size:12px;color:var(--gold-deep);align-items:center;font-weight:600;">
-                  <span style="font-size:10px;">→</span> Development candidate nomination
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -3212,7 +3560,7 @@ nav { flex: 1; position: relative; }
 </div>
 
 <script>
-const TOTAL = 14;
+const TOTAL = 17;
 let current = 1;
 
 const slides     = document.querySelectorAll('.slide');
@@ -3222,14 +3570,15 @@ const progressEl = document.getElementById('progress-fill');
 
 // Nav map: which slides each nav item covers
 const navMap = {
-  'nav-cover':       [1],
-  'nav-opportunity': [2, 3],
-  'nav-science':     [4, 5],
-  'nav-platform':    [6, 7, 8],
-  'nav-pipeline':    [9, 10, 11],
-  'nav-market':      [12],
-  'nav-moat':        [13],
-  'nav-team':        [14],
+  'nav-cover':          [1],
+  'nav-opportunity':    [2, 3],
+  'nav-science':        [4, 5],
+  'nav-platform':       [6, 7, 8, 9],
+  'nav-pipeline':       [10, 11, 12],
+  'nav-path-to-value':  [13, 14],
+  'nav-market':         [15],
+  'nav-moat':           [16],
+  'nav-team':           [17],
 };
 
 function goTo(n) {
