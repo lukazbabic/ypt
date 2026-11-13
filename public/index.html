@@ -2260,6 +2260,29 @@ nav { flex: 1; position: relative; }
   .moa-layout,
   .market-grid { grid-template-columns: 1fr; }
 
+  /* Slide 2 - keep the three boxes side by side and scroll them horizontally
+     rather than stacking, so the comparison stays readable on a phone */
+  #s2 .problem-cols {
+    display: flex;
+    grid-template-columns: none;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    gap: 12px;
+    padding-bottom: 8px;
+    margin-left: -16px;
+    margin-right: -16px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  #s2 .problem-col {
+    flex: 0 0 80%;
+    min-width: 80%;
+    scroll-snap-align: start;
+    padding: 20px 18px;
+  }
+
   /* Two-col panels (validation, lead layout) */
   .two-col {
     grid-template-columns: 1fr;
@@ -2347,6 +2370,8 @@ nav { flex: 1; position: relative; }
   .key-message { font-size: 13px; margin-bottom: 18px; }
 
   .evidence-stat { font-size: 24px; }
+
+  #s2 .problem-col { flex: 0 0 85%; min-width: 85%; }
 
   /* Benefit grid → 1 col on small phones */
   .benefit-grid { grid-template-columns: 1fr; }
