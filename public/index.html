@@ -3721,14 +3721,42 @@ navItems.forEach(item => item.addEventListener('click', () => {
 // ── TOUCH SWIPE ────────────────────────────────────────────────
 let touchStartX = 0;
 let touchStartY = 0;
+let touchScroller = null;
+
+// Walk up from the touched node looking for an element that scrolls sideways
+// (slide 2's market boxes, the pathway rows, the bilirubin spectrum).
+function horizontalScroller(node) {
+  for (let el = node; el && el !== document.body; el = el.parentElement) {
+    if (el.scrollWidth - el.clientWidth > 4) {
+      const ox = getComputedStyle(el).overflowX;
+      if (ox === 'auto' || ox === 'scroll') return el;
+    }
+  }
+  return null;
+}
+
 document.addEventListener('touchstart', e => {
   touchStartX = e.changedTouches[0].screenX;
   touchStartY = e.changedTouches[0].screenY;
+  touchScroller = horizontalScroller(e.target);
 }, { passive: true });
+
 document.addEventListener('touchend', e => {
   if (deck.classList.contains('nav-open')) return;
   const dx = e.changedTouches[0].screenX - touchStartX;
   const dy = e.changedTouches[0].screenY - touchStartY;
+
+  // If the gesture started inside a sideways scroller, let the scroller have
+  // it, unless it has already run out of travel in that direction. Then the
+  // swipe falls through and changes slide as usual.
+  if (touchScroller) {
+    const el = touchScroller;
+    const maxLeft = el.scrollWidth - el.clientWidth;
+    const atStart = el.scrollLeft <= 8;
+    const atEnd = el.scrollLeft >= maxLeft - 8;
+    if ((dx < 0 && !atEnd) || (dx > 0 && !atStart)) return;
+  }
+
   // Only trigger swipe if horizontal movement is dominant and > 48px
   if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 48) {
     dx < 0 ? goTo(current + 1) : goTo(current - 1);
